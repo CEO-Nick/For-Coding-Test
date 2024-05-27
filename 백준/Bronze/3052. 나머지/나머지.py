@@ -1,12 +1,10 @@
 import sys 
 input = sys.stdin.readline
 
-check = dict()
+check = [0] * 42
 
 for _ in range(10):
     n = int(input())
-    remain = n % 42 
-    if remain not in check:
-        check[remain] = 1
-
-print(len(check)) 
+    check[n%42] = 1
+    
+print(sum(check))
