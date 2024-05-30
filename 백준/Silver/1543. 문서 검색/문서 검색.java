@@ -1,22 +1,34 @@
-
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String doc = sc.nextLine();
         String word = sc.nextLine();
 
-        int ans = 0;
-        int startIndex = 0;
+        int i = 0;
+        int count = 0;
+        int len = word.length();
+
+        // 내가 짠 코드
+//        while (i <= (doc.length() - len)) {
+//            String substring = doc.substring(i, i + len);
+//            if (word.equals(substring)) {
+//                count++;
+//                i += len;
+//            } else
+//                i++;
+//        }
+
         while(true) {
-            int findIdx = doc.indexOf(word, startIndex);
-            if (findIdx < 0) {
-                break;
-            }
-            startIndex = findIdx + word.length();
-            ans++;
+            int findIdx = doc.indexOf(word, i);
+            if (findIdx < 0) break;
+            i = findIdx + len;
+            count++;
         }
-        System.out.println(ans);
+
+        System.out.println(count);
     }
+
 }
