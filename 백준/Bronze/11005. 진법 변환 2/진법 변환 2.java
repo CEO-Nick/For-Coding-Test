@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,12 +17,19 @@ public class Main {
         }
 
         String ans = "";
-        while (N > 0) {
+        while (true) {
             int modular = N % B;
             if (modular < 10) ans += modular;
             else ans += (alphabet[modular-10]);
 
             N /= B;
+
+            if (N < B) {
+                if (N == 0) break;
+                if (N < 10) ans += N;
+                else ans += (alphabet[N-10]);
+                break;
+            }
         }
 
         for (int i = ans.length()-1; i >= 0; i--) {
