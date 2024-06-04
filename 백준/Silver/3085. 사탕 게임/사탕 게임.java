@@ -64,37 +64,36 @@ public class Main {
         int max = -1;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                for (int d = 0; d < 2; d++) {
-                    int nx = i + directions[d][0];
-                    int ny = j + directions[d][1];
-                    // board 범위 안에 있을 때
-                    if (nx < N && ny < N) {
-                        // 인접한 칸의 사탕이 다른 색이라면
-                        if (board[i][j] != board[nx][ny]) {
-                            // 교환
-                            swap(board, i, j, nx, ny);
+                // 아래 칸과 교환 시도
+                if (i + 1 < N && board[i][j] != board[i+1][j]) {
+                    // 교환
+                    swap(board, i, j, i+1, j);
 
-                            // 먹을 수 있는 사탕 개수 조사
-                            int count = checkBoard(board, N);
-                       
-                            max = Math.max(count, max);
-                            
-                            // board 원상복구
-                            swap(board, nx, ny, i, j);
-                        }
-                    }
+                    // 먹을 수 있는 사탕 개수 조사
+                    int count = checkBoard(board, N);
+
+                    max = Math.max(count, max);
+
+                    // board 원상복구
+                    swap(board, i+1, j, i, j);
+                }
+                // 오른쪽 칸과 교환 시도
+                if (j + 1 < N && board[i][j] != board[i][j+1]) {
+                    // 교환
+                    swap(board, i, j, i, j+1);
+
+                    // 먹을 수 있는 사탕 개수 조사
+                    int count = checkBoard(board, N);
+
+                    max = Math.max(count, max);
+
+                    // board 원상복구
+                    swap(board, i, j+1, i, j);
                 }
             }
         }
 
         System.out.println(max);
-
-        // 1. (i, j)에서 오른쪽, 아래쪽에 색이 다른 사탕 있는지 확인
-            // 1.1 다른 색 사탕 있으면 교환
-                // 1.1.1 아래쪽이랑 교환 시 i, i+1 row, j column 먹을 수 있는지 체크
-                // 1.1.2 오른쪽이랑 교환 시 i row, j, j+1 column 먹을 수 있는지 체크
-                // 1.1.3 먹을 수 있다면 최대 개수 비교 후 저장
-            // 1.2 다른 사탕 없으면 다음 칸으로 이동
     }
 }
 
