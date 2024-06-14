@@ -13,33 +13,37 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        String[] input = br.readLine().split(" ");
-        int N = Integer.parseInt(input[0]);
-        int M = Integer.parseInt(input[1]);
+        String input = br.readLine();
+        StringTokenizer st = new StringTokenizer(input);
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
         int[][] array = new int[N + 1][N + 1];
 
         for (int i = 1; i <= N; i++) {
             String line = br.readLine();
-            StringTokenizer st = new StringTokenizer(line);
+            st = new StringTokenizer(line);
             for (int j = 1; j <= N; j++) {
-                array[i][j] = array[i][j - 1] + Integer.parseInt(st.nextToken());
+                array[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        int[][] arrSum = new int[N+1][N+1];
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                arrSum[i][j] = arrSum[i-1][j] + arrSum[i][j-1] - arrSum[i-1][j-1] + array[i][j];
             }
         }
 
         while (M-- > 0) {
             String line = br.readLine();
-            StringTokenizer st = new StringTokenizer(line);
+            st = new StringTokenizer(line);
             int x1 = Integer.parseInt(st.nextToken());
             int y1 = Integer.parseInt(st.nextToken());
             int x2 = Integer.parseInt(st.nextToken());
             int y2 = Integer.parseInt(st.nextToken());
 
-            int ans = 0;
-            while (x1 <= x2) {
-                ans += (array[x1][y2] - array[x1][y1 - 1]);
-                x1++;
-            }
+            int ans = arrSum[x2][y2] - arrSum[x1-1][y2] - arrSum[x2][y1-1] + arrSum[x1-1][y1-1];
 
             bw.write(ans + "\n");
         }
