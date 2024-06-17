@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -25,6 +24,8 @@ public class Main {
         }
 
 
+        // A + B + C = X -> A + B = X - C
+        // A + B의 집합 만들기
         int[] sums = new int[(N * (N+1)) / 2];
         int sumIdx = 0;
         for (int i = 0; i < N; i++) {
@@ -35,6 +36,8 @@ public class Main {
 
         Arrays.sort(sums);
 
+        // 모든 X - C가 A + B 집합(sums)에 있는지 확인
+        // 있으면 그 중 X의 최댓값 구하기
         int max = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
