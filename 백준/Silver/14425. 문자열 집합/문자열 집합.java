@@ -28,7 +28,9 @@ public class Main {
 
         int ans = 0;
         for (int i = 0; i < M; i++) {
-            ans += isExist(array, br.readLine());
+            if (Arrays.binarySearch(array, br.readLine()) >= 0) {
+                ans++;
+            }
         }
 
         bw.write(ans + "\n");
@@ -38,17 +40,5 @@ public class Main {
         br.close();
     }
 
-    public static int isExist(String[] array, String x) {
-        int l = 0;
-        int r = array.length - 1;
-        while (l <= r) {
-            int m = (l + r) / 2;
-            if (array[m].equals(x)) return 1;
-            else if (array[m].compareTo(x) < 0) l = m + 1;
-            else r = m - 1;
-        }
-
-        return 0;
-    }
 
 }
