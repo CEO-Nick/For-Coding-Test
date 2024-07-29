@@ -39,8 +39,7 @@ public class Main {
         check = new boolean[n + 1];
         memo = new int[n+1];
         makeTree(r);
-        check = new boolean[n + 1];
-        traversal(r);
+        
         StringBuilder sb = new StringBuilder();
         while (q-- > 0) {
             int u = Integer.parseInt(br.readLine());
@@ -49,33 +48,22 @@ public class Main {
         System.out.println(sb);
     }
 
-    private static int traversal(int node) {
+    private static int makeTree(int node) {
         check[node] = true;
-        if (tree[node].isEmpty()) {
+        if (inputs[node].isEmpty()) {
             memo[node] = 1;
             return 1;
         }
         int count = 0;
-        for (int i = 0; i < tree[node].size(); i++) {
-            int child = tree[node].get(i);
+        for (int i = 0; i < inputs[node].size(); i++) {
+            Integer child = inputs[node].get(i);
             if (!check[child]) {
-                count += traversal(child);
+                tree[node].add(child);
+                count += makeTree(child);
             }
         }
         memo[node] = count + 1;
         return memo[node];
-    }
-
-    private static void makeTree(int root) {
-        check[root] = true;
-        if (inputs[root].isEmpty()) return;
-        for (int i = 0; i < inputs[root].size(); i++) {
-            Integer node = inputs[root].get(i);
-            if (!check[node]) {
-                tree[root].add(node);
-                makeTree(node);
-            }
-        }
     }
 
 }
