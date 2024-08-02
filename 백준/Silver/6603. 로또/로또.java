@@ -12,10 +12,11 @@ public class Main {
     public static int[] array;
     public static int[] answer;
     public static boolean[] check;
+    public static BufferedWriter bw;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st;
 
@@ -29,7 +30,7 @@ public class Main {
             }
             answer = new int[6];
             check = new boolean[k];
-            solution(0, bw);
+            solution(0);
             bw.write("\n");
         }
         bw.flush();
@@ -37,7 +38,7 @@ public class Main {
         br.close();
     }
 
-    public static void solution (int length, BufferedWriter bw) throws IOException {
+    public static void solution (int length) throws IOException {
         if (length == 6) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < 6; i++) {
@@ -52,7 +53,7 @@ public class Main {
             if (!check[i]) {
                 check[i] = true;
                 answer[length] = array[i];
-                solution(length + 1, bw);
+                solution(length + 1);
                 check[i] = false;
             }
         }
