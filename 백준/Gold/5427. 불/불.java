@@ -42,6 +42,7 @@ public class Main {
 
             int answer = Integer.MAX_VALUE;
 
+            // 테두리만 순회해서 시간복잡도 O(w + h)로 만들기
             for (int i = 0; i < h; i++) {
                 if (i == 0 || i == h - 1) {
                     for (int j = 0; j < w; j++) {
@@ -73,9 +74,12 @@ public class Main {
     }
 
     static void canGoOut(Point startPoint) {
+        // 대피 경로 체크
         moveBfs(startPoint);
+        // 불길의 경로 체크
         fireBfs();
 
+        // 대피 경로 따라가면서 불길이 왔던적 있는지 확인해보기
         Queue<Point> queue = new ArrayDeque<>();
         queue.add(startPoint);
         visited = new boolean[h][w];
@@ -91,10 +95,12 @@ public class Main {
                 int nx = point.x + dx[i];
                 int ny = point.y + dy[i];
 
+                // h x w 범위 밖 || 갔던 적 있음 || 벽 -> pass
                 if (!inRange(nx, ny)) continue;
                 if (visited[nx][ny]) continue;
                 if (map[nx][ny] == '#') continue;
-                
+
+                // nx, ny 위치에 불이 붙은 적이 없거나, 내가 오고 나서 불이 붙은 경우 -> 갈 수 있는 위치
                 if (movePath[nx][ny] != 0 && (firePath[nx][ny] == 0 || movePath[nx][ny] < firePath[nx][ny])) {
                     visited[nx][ny] = true;
                     queue.add(new Point(nx, ny));
@@ -103,6 +109,8 @@ public class Main {
 
         }
     }
+
+    // 상근이의 대피 경로 체크(불 신경 안쓰고)
     static void moveBfs(Point startPoint) {
         Queue<Point> move = new ArrayDeque<>();
         movePath = new int[h][w];
@@ -149,6 +157,7 @@ public class Main {
         }
     }
 
+    // 불의 이동 경로 체크
     static void fireBfs() {
         Queue<Point> fire = new ArrayDeque<>();
         firePath = new int[h][w];
