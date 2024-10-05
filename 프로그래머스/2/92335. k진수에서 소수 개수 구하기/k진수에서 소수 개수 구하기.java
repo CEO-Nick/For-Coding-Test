@@ -5,7 +5,8 @@ class Solution {
     public int solution(int n, int k) {
         int answer = 0;
         
-        String changed = changeBase(n, k);
+        // String changed = changeBase(n, k);
+        String changed = Integer.toString(n, k);
         
         changed = changed.replaceAll("0", " ");
         String[] numArr = changed.split(" ");
