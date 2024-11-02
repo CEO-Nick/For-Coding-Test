@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,54 +6,52 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+  static int n;
+  static int m;
+  static int[] heights;
+  static long ans = 0;
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    n = Integer.parseInt(st.nextToken());
+    m = Integer.parseInt(st.nextToken());
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+    heights = new int[n];
 
-        // H 높이 나무 모두 절단
-        Integer[] height = new Integer[N];
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            height[i] = Integer.parseInt(st.nextToken());
-        }
-
-        int ans = findOptimalHeight(height, 0, 1000000000, M);
-
-        System.out.println(ans);
-
-        br.close();
+    st = new StringTokenizer(br.readLine());
+    for (int i = 0; i < n; i++) {
+      heights[i] = Integer.parseInt(st.nextToken());
     }
 
-    public static int findOptimalHeight(Integer[] height, int l, int r, int x) {
-        int ans = -1;
+    binarySearch();
 
-        while (l <= r) {
-            // 임의의 절단기 높이
-            int m = (l + r) / 2;
+    System.out.println(ans);
+  }
 
-            // 가져갈 수 있는 나무 길이 구하기
-            long sum = 0;
-            for (Integer integer : height) {
-                if (integer > m) {
-                    sum += integer - m;
-                }
-            }
+  static void binarySearch() {
+    long start = 0L, end = Long.MAX_VALUE;
 
-            // 원하는 만큼 가져갈 수 있다면 높이 높여본다
-            if (sum >= x) {
-                l = m + 1;
-                ans = m;
-            } else {    // 원하는 만큼 못 가져가면 높이 낮춰본다
-                r = m - 1;
-            }
-        }
+    while (start <= end) {
+      long mid = (start + end) / 2;
+      long sum = calc(mid);
 
-        return ans;
+      if (sum >= m) {
+        ans = mid;
+        start = mid + 1;
+      }
+      else end = mid - 1;
 
     }
+  }
 
+  public static long calc(long std) {
+    long sum = 0;
+    for (int i = 0; i < n; i++) {
+      if (heights[i] > std) {
+        sum += heights[i] - std;
+      }
+    }
+    return sum;
+  }
 }
