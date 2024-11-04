@@ -2,64 +2,76 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    static List<Integer>[] relation;
-    static boolean[] visited;
-    static int n;
-    static int m;
-    static int p1;
-    static int p2;
-    static int answer = -1;
+  static class Relative {
+    int n;
+    int depth;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+    Relative(int n, int depth) {
+      this.n = n;
+      this.depth = depth;
+    }
+  }
 
-        n = Integer.parseInt(br.readLine());
-        st = new StringTokenizer(br.readLine());
+  static int n;
+  static int x;
+  static int y;
+  static int m;
+  static int[][] graph;
+  static int[] visited;
 
-        p1 = Integer.parseInt(st.nextToken());
-        p2 = Integer.parseInt(st.nextToken());
+  public static void main(String[] args) throws IOException {
+    // 부모 - 자식 : 1
+    // 나 - 아빠 형제 : 3
 
-        m = Integer.parseInt(br.readLine());
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    n = Integer.parseInt(br.readLine());
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    x = Integer.parseInt(st.nextToken());
+    y = Integer.parseInt(st.nextToken());
 
-        relation = new ArrayList[n + 1];
-        for (int i = 1; i <= n; i++) {
-            relation[i] = new ArrayList<>();
-        }
+    graph = new int[n+1][n+1];
+    visited = new int[n+1];
 
-        // x 부모 | y 자식
-        for (int i = 0; i < m; i++) {
-            st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            relation[x].add(y);
-            relation[y].add(x);
-        }
+    m = Integer.parseInt(br.readLine());
+    for (int i = 0; i < m; i++) {
+      st = new StringTokenizer(br.readLine());
+      int a = Integer.parseInt(st.nextToken());
+      int b = Integer.parseInt(st.nextToken());
 
-        visited = new boolean[n + 1];
-        dfs(p1, 0);
-        System.out.println(answer);
-        br.close();
+      graph[a][b] = 1;
+      graph[b][a] = 1;
     }
 
-    static void dfs(int node, int count) {
-        visited[node] = true;
-        if (node == p2) {
-            answer = count;
-            return;
-        }
-
-        for (int i = 0; i < relation[node].size(); i++) {
-            int next = relation[node].get(i);
-            if (!visited[next]) {
-                dfs(next, count + 1);
-            }
-        }
+    bfs();
+    if (visited[y] == 0) {
+      System.out.println(-1);
+      return;
     }
+
+    System.out.println(visited[y]);
+  }
+
+  public static void bfs() {
+    Queue<Relative> q = new ArrayDeque<>();
+    q.add(new Relative(x, 0));
+    visited[x] = 0;
+    while (!q.isEmpty()) {
+      Relative cur = q.poll();
+
+      for (int i = 1; i <= n; i++) {
+        // 방문한 적 없는 경우
+        if (visited[i] == 0 && graph[cur.n][i] != 0) {
+          q.add(new Relative(i, cur.depth+1));
+          visited[i] = cur.depth+1;
+        }
+      }
+    }
+  }
+
 }
