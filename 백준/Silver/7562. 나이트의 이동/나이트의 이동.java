@@ -1,85 +1,98 @@
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
+// 7562 - 나이트의 이동
 public class Main {
-    static int t;
-    static int l;
-    static int x;
-    static int y;
-    static int tx;
-    static int ty;
 
-    static int[][] visited;
+  static class Point {
 
-    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    int x;
+    int y;
+    int depth;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    Point(int x, int y, int depth) {
+      this.x = x;
+      this.y = y;
+      this.depth = depth;
+    }
+  }
 
-        t = Integer.parseInt(br.readLine());
-        String[] input;
-        while (t-- > 0) {
-            l = Integer.parseInt(br.readLine());
-            input = br.readLine().split(" ");
-            x = Integer.parseInt(input[0]);
-            y = Integer.parseInt(input[1]);
-            input = br.readLine().split(" ");
-            tx = Integer.parseInt(input[0]);
-            ty = Integer.parseInt(input[1]);
+  static int t;
+  static int n;
+  static int[][] grid;
+  static int[][] visited;
+    
+  static int x1;
+  static int y1;
 
-            bfs();
+  static int x2;
+  static int y2;
+
+  static int[] dxs = new int[]{-2, -1, 1, 2, 2, 1, -1, -2};
+  static int[] dys = new int[]{1, 2, 2, 1, -1, -2, -2, -1};
+
+
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st;
+    t = Integer.parseInt(br.readLine());
+
+    StringBuilder sb = new StringBuilder();
+
+    while (t-- > 0) {
+      n = Integer.parseInt(br.readLine());
+      grid = new int[n][n];
+      visited = new int[n][n];
+
+      st = new StringTokenizer(br.readLine());
+      x1 = Integer.parseInt(st.nextToken());
+      y1 = Integer.parseInt(st.nextToken());
+
+      st = new StringTokenizer(br.readLine());
+      x2 = Integer.parseInt(st.nextToken());
+      y2 = Integer.parseInt(st.nextToken());
+
+      int result = bfs();
+      sb.append(result).append("\n");
+    }
+
+    System.out.println(sb);
+
+  }
+
+  static int bfs() {
+    Queue<Point> q = new ArrayDeque<>();
+    q.add(new Point(x1, y1, 0));
+    visited[x1][y1] = 1;
+
+    while (!q.isEmpty()) {
+      Point cur = q.poll();
+
+      if (cur.x == x2 && cur.y == y2) {
+        return cur.depth;
+      }
+      for (int i = 0; i < dxs.length; i++) {
+        int nx = cur.x + dxs[i];
+        int ny = cur.y + dys[i];
+
+        if (inRange(nx, ny) && visited[nx][ny] == 0) {
+          q.add(new Point(nx, ny, cur.depth + 1));
+          visited[nx][ny] = 1;
         }
-        bw.flush();
-        bw.close();
-        br.close();
+      }
     }
 
-    static void bfs() throws IOException {
-        Queue<Point> q = new ArrayDeque<>();
-        q.add(new Point(x, y));
-        visited = new int[l][l];
-        visited[x][y] = 1;
-        int[] dx = {-2, -1, 1, 2, 2, 1, -1, -2};
-        int[] dy = {1, 2, 2, 1, -1, -2, -2, -1};
+    return 0;
+  }
 
-        while (!q.isEmpty()) {
-            Point p = q.poll();
-            for (int i = 0; i < 8; i++) {
-                int nx = p.x + dx[i];
-                int ny = p.y + dy[i];
+  static boolean inRange(int nx, int ny) {
+    return 0 <= nx && nx < n && 0 <= ny && ny < n;
+  }
 
-                if (canGo(nx, ny)) {
-                    visited[nx][ny] = visited[p.x][p.y] + 1;
-                    q.add(new Point(nx, ny));
-                }
-
-                if (nx == tx && ny == ty) {
-                    bw.write(visited[nx][ny] - 1 + "\n");
-                    return;
-                }
-            }
-        }
-    }
-
-    static boolean canGo(int x, int y) {
-        if (!inRange(x, y)) return false;
-
-        if (visited[x][y] != 0) return false;
-
-        return true;
-    }
-
-    static boolean inRange(int x, int y) {
-        return 0 <= x && x < l && 0 <= y && y < l;
-    }
-    static class Point {
-        int x;
-        int y;
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
 
 }
