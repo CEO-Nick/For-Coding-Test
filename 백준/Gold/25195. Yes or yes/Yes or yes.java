@@ -49,15 +49,8 @@ public class Main {
       fan.put(Integer.parseInt(st.nextToken()), true);
     }
 
-    for (int i = 1; i <= n; i++) {
-      if (!fan.containsKey(i)) {
-        fan.put(i, false);
-      }
-    }
-
     dfs(1);
 
-    // met이 false로 바뀐 적이 없다 -> 팬클럽이 없는 경로가 없다는 의미
     if (met) {
       System.out.println("Yes");
     } else {
@@ -69,7 +62,7 @@ public class Main {
     visited[node] = true;
 
     // 현재 노드에 팬클럽이 있다면 해당 경로는 더이상 탐색할 필요가 없음
-    if (fan.get(node)) return;
+    if (fan.containsKey(node)) return;
 
     // 리프노드 -> 팬클럽 없는 경로가 있다는 의미
     if (list[node].isEmpty()) {
