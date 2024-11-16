@@ -20,7 +20,7 @@ class Solution {
         
         doubleList.sort((o1, o2) -> o1.size() - o2.size());
         // doubleList.sort(Comparator.comparingInt(List::size));
-        answer = new int[doubleList.get(doubleList.size()-1).size()];
+        answer = new int[doubleList.size()];
         boolean[] visited = new boolean[100001];
         for (int i = 0; i < doubleList.size(); i++) {
             if (i == 0) {
