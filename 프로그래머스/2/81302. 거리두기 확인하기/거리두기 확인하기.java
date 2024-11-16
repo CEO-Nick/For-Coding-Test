@@ -41,6 +41,8 @@ class Solution {
             // 바로 다음 칸에 사람이 있으면 -> 거리두기 안 지킴 -> 해당 대기실은 0
             if (place[nx].charAt(ny) == 'P') return false;
             
+            visited[nx][ny] = true;
+            
             // 다음 칸이 책상이라면 한 칸 더 조사해야 된다 
             for (int j = 0; j < 4; j++) {
                 int nnx = nx + dxs[j];
