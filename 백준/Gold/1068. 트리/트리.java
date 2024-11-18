@@ -1,60 +1,63 @@
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    public static List<Integer>[] tree;
-    public static boolean[] check;
-    public static int count;
-    public static int delNode;
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
+  static int n;
+  static List<Integer>[] tree;
+  static int del;
+  static int count = 0;
 
-        tree = new ArrayList[n];
-        for (int i = 0; i < n; i++) {
-            tree[i] = new ArrayList<>();
-        }
-        int parentNode = 0;
-        for (int i = 0; i < n; i++) {
-            int parent = sc.nextInt();
-
-            if (parent != -1) tree[parent].add(i);
-            else parentNode = i;
-        }
-
-        delNode = sc.nextInt();
-        check = new boolean[n];
-        count = 0;
-        deleteNode(parentNode);
-        check = new boolean[n];
-        if (parentNode != delNode) countLeafNodeWithoutDelNode(parentNode);
-        System.out.println(count);
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    n = sc.nextInt();
+    tree = new ArrayList[n];
+    for (int i = 0; i < n; i++) {
+      tree[i] = new ArrayList<>();
     }
 
-    public static void deleteNode(int node) {
-        check[node] = true;
-        for (int i = 0; i < tree[node].size(); i++) {
-            int child = tree[node].get(i);
-            if (child == delNode) tree[node].remove(i);
-            else if (!check[child]) deleteNode(child);
-
-        }
+    int root = 0;
+    for (int i = 0; i < n; i++) {
+      int parent = sc.nextInt();
+      if (parent == -1) {
+        root = i;
+        continue;
+      }
+      tree[parent].add(i);
     }
 
-    public static void countLeafNodeWithoutDelNode(int node) {
-        check[node] = true;
-        if (tree[node].isEmpty()) {
-            count++;
-        } else {
-            for (int i = 0; i < tree[node].size(); i++) {
-                Integer child = tree[node].get(i);
-                if (!check[child]) {
-                    countLeafNodeWithoutDelNode(child);
-                }
-            }
-        }
+    del = sc.nextInt();
+
+    traversal(root);
+    System.out.println(count);
+  }
+
+  static void traversal(int node) {
+    if (node == del) return;
+    if (tree[node].isEmpty()) {
+      count++;
+      return;
     }
+
+    // 자식 노드들이 모두 제거 노드인 경우 검증
+    boolean hasNoChild = true;
+    for (int i = 0; i < tree[node].size(); i++) {
+      if (tree[node].get(i) != del) {
+        hasNoChild = false;
+        break;
+      }
+    }
+    if (hasNoChild) {
+      count++;
+      return;
+    }
+
+    for (int i = 0; i < tree[node].size(); i++) {
+      int nextNode = tree[node].get(i);
+      if (nextNode == del) continue;
+      traversal(nextNode);
+    }
+  }
+
 }
