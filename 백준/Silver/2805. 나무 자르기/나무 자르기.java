@@ -8,8 +8,8 @@ public class Main {
 
   static int n;
   static int m;
-  static int[] heights;
-  static long ans = 0;
+
+  static int[] woods;
 
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,41 +17,37 @@ public class Main {
     n = Integer.parseInt(st.nextToken());
     m = Integer.parseInt(st.nextToken());
 
-    heights = new int[n];
-
+    long maxHeight = Integer.MIN_VALUE;
     st = new StringTokenizer(br.readLine());
+
+    woods = new int[n];
     for (int i = 0; i < n; i++) {
-      heights[i] = Integer.parseInt(st.nextToken());
+      woods[i] = Integer.parseInt(st.nextToken());
+      maxHeight = Math.max(maxHeight, woods[i]);
     }
 
-    binarySearch();
+    long l = 0, r = maxHeight;
+    long ans = -1;
+    while (l <= r) {
+      long mid = (l + r) / 2;
+
+      long sum = 0;
+      for (int i = 0; i < n; i++) {
+        // 둘의 차이가 음수면 잘리는게 없음 -> 0 더하기
+        sum += Math.max(woods[i] - mid, 0);
+      }
+
+      if (sum >= m) {
+        ans = mid;
+        l = mid + 1;
+      }
+      else {
+        r = mid - 1;
+      }
+
+    }
 
     System.out.println(ans);
   }
 
-  static void binarySearch() {
-    long start = 0L, end = Long.MAX_VALUE;
-
-    while (start <= end) {
-      long mid = (start + end) / 2;
-      long sum = calc(mid);
-
-      if (sum >= m) {
-        ans = mid;
-        start = mid + 1;
-      }
-      else end = mid - 1;
-
-    }
-  }
-
-  public static long calc(long std) {
-    long sum = 0;
-    for (int i = 0; i < n; i++) {
-      if (heights[i] > std) {
-        sum += heights[i] - std;
-      }
-    }
-    return sum;
-  }
 }
