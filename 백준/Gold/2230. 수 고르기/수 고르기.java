@@ -1,45 +1,39 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+  static int n;
+  static int m;
+  static int[] arr;
 
-        Scanner sc = new Scanner(System.in);
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    n = Integer.parseInt(st.nextToken());
+    m = Integer.parseInt(st.nextToken());
 
-        int N = sc.nextInt();
-        int M = sc.nextInt();
+    arr = new int[n];
+    for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(br.readLine());
 
-        Integer[] array = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            array[i] = sc.nextInt();
-        }
+    Arrays.sort(arr);
 
-        // 2개 골랐을 때
-        // 차이가 M 이상 && 그 중 차이가 제일 작은 경우
+    int j = 0;
+    int ans = Integer.MAX_VALUE;
 
-        // 정렬을 해야 차이가 M 미만일 때, 다음 원소 선택하면 차이가 증가하는걸 기대할 수 있음
-        Arrays.sort(array);
-
-        int j = 0;
-        int ans = Integer.MAX_VALUE;
-
-        for (int i = 0; i < N; i++) {
-            while (array[j] - array[i] < M && j < N-1) {
-                j++;
-            }
-            int diff = array[j] - array[i];
-            if (diff >= M) ans = Math.min(ans, diff);
-        }
-
-        System.out.println(ans);
+    for (int i = 0; i < n; i++) {
+      while (arr[j] - arr[i] < m && j < n-1) {
+        j++;
+      }
+      int diff = arr[j] - arr[i];
+      if (diff >= m) ans = Math.min(ans, diff);
     }
 
+    System.out.println(ans);
 
-
-
+  }
 }
