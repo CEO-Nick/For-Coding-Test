@@ -33,24 +33,27 @@ public class Main {
             }
         }
 
+        int maxK = 0;
+        int am = 0;
+        while (am < n*n) {
+            am = maxK * maxK + ((maxK+1) * (maxK+1));
+            maxK++;
+        }
+
         int max = 0;
-        k = 1;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                k = 0;
-                int amount = 0;
-                do {
+                for (int l = 0; l <= maxK; l++) {
+                    k = l;
+                    int amount = k * k + ((k+1) * (k+1));
                     visited = new boolean[n][n];
                     gold = 0;
-                    amount = k * k + ((k+1) * (k+1));
                     dfs(i, j, 0);
                     if (gold * m - amount >= 0) {
                         max = Math.max(max, gold);
                     //    System.out.println("i : " + i + "\tj : " + j + "\tk : " + k + "\tgold : " + gold);
                     } 
-                    k++;
-                } while (amount <= n * n);
-                
+                }
             }
         }
 
