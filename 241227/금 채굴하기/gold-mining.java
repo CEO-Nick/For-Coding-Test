@@ -43,7 +43,7 @@ public class Main {
         int max = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                for (int l = 0; l <= maxK; l++) {
+                for (int l = 0; l <= n*2+1; l++) {
                     k = l;
                     int amount = k * k + ((k+1) * (k+1));
                     visited = new boolean[n][n];
