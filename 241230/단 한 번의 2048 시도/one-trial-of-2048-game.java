@@ -32,9 +32,7 @@ public class Main {
                     j--;
 
                 }
-                // System.out.println(Arrays.toString(tmp[i]));
             }
-            // System.out.println();
             // 중력작용 적용하기
             for (int i = 0; i < 4; i++) {
                 int tmp2Idx = 3;
@@ -50,8 +48,6 @@ public class Main {
                         tmp2[i][tmp2Idx--] = tmp[i][j];
                     }
                 }
-                // System.out.println(Arrays.toString(tmp2[i]));
-
             }
         } else if (input.equals("L")) {
             // 해당 방향으로 민 결과를 tmp 배열에 저장
@@ -65,9 +61,7 @@ public class Main {
                     j++;
 
                 }
-                // System.out.println(Arrays.toString(tmp[i]));
             }
-            // System.out.println();
             // 중력작용 적용하기
             for (int i = 0; i < 4; i++) {
                 int tmp2Idx = 0;
@@ -83,8 +77,6 @@ public class Main {
                         tmp2[i][tmp2Idx++] = tmp[i][j];
                     }
                 }
-                // System.out.println(Arrays.toString(tmp2[i]));
-
             }
         } else if (input.equals("U")) {
             // 해당 방향으로 민 결과를 tmp 배열에 저장
@@ -98,11 +90,6 @@ public class Main {
                     i++;
                 }
             }
-            // for (int i = 0; i < 4; i++) {
-            //     System.out.println(Arrays.toString(tmp[i]));
-            // }
-            // System.out.println();
-
             // 중력작용 적용하기
             for (int j = 0; j < 4; j++) {
                 int tmp2Idx = 0;
@@ -120,9 +107,6 @@ public class Main {
                 }
 
             }
-            // for (int i = 0; i < 4; i++) {
-            //     System.out.println(Arrays.toString(tmp2[i]));
-            // }
         } else {
             for (int j = 0; j < 4; j++) {
                 int tmpIdx = 3;
@@ -134,10 +118,6 @@ public class Main {
                     i--;
                 }
             }
-            // for (int i = 0; i < 4; i++) {
-            //     System.out.println(Arrays.toString(tmp[i]));
-            // }
-            // System.out.println();
             // 중력작용 적용하기
             for (int j = 0; j < 4; j++) {
                 int tmp2Idx = 3;
@@ -154,9 +134,6 @@ public class Main {
                     }
                 }
             }
-            // for (int i = 0; i < 4; i++) {
-            //     System.out.println(Arrays.toString(tmp2[i]));
-            // }
         }
 
         for (int i = 0; i < 4; i++) {
