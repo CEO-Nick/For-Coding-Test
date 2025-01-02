@@ -25,8 +25,8 @@ public class Main {
         switch(method) {
             // 1번 폭탄
             case 0:
-                for (int i = 0; i < n; i++) {
-                    bombed[i][y] += bomb;
+                for (int i = x-2; i <= x+2; i++) {
+                    if (inRange(i, y)) bombed[i][y] += bomb;
                 }
                 break;
             // 2번 폭탄
