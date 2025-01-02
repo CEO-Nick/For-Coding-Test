@@ -3,6 +3,7 @@ import java.io.*;
 
 public class Main {
 
+    // 폭탄 위치를 저장할 클래스
     static class Point {
         int x;
         int y;
@@ -13,9 +14,11 @@ public class Main {
         }
     }
     
+    // 2번 타입 폭탄용 dx, dy
     static int[] dxs = new int[] {1, 0, -1, 0};
     static int[] dys = new int[] {0, 1, 0, -1};
 
+    // 3번 타입 폭탄용 dx, dy
     static int[] dxs2 = new int[] {1, -1, -1, 1};
     static int[] dys2 = new int[] {1, 1, -1, -1};
 
@@ -29,6 +32,7 @@ public class Main {
                     if (inRange(i, y)) bombed[i][y] += bomb;
                 }
                 break;
+
             // 2번 폭탄
             case 1:
                 for (int i = 0; i < 4; i++) {
@@ -39,6 +43,8 @@ public class Main {
                     }
                 }
                 break;
+
+            // 3번 폭탄
             case 2:
                 for (int i = 0; i < 4; i++) {
                     int nx = x + dxs2[i];
