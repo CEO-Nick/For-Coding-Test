@@ -8,11 +8,11 @@ public class Main {
  
     static void print() {
         int len = list.size();
-        if (len >= 3) {
-            for (int i = 2; i < len; i++) {
-                if (list.get(i) == list.get(i-1) && list.get(i-1) == list.get(i-2)) return;
-            }   
-        } 
+        // if (len >= 3) {
+        //     for (int i = 2; i < len; i++) {
+        //         if (list.get(i) == list.get(i-1) && list.get(i-1) == list.get(i-2)) return;
+        //     }   
+        // } 
 
         for (int i = 0; i < len; i++) {
             System.out.print(list.get(i) + " ");
@@ -28,6 +28,11 @@ public class Main {
         }
 
         for (int i = 1; i <= k; i++) {
+            if (count >= 2 && 
+                i == list.get(list.size() - 1) && 
+                i == list.get(list.size() - 2)) 
+                continue;
+                
             list.add(i);
             recur(count+1);
             list.remove(list.size()-1);
