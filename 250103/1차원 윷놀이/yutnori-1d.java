@@ -11,7 +11,7 @@ public class Main {
     static int calcScore() {
         int cnt = 0;
         for (int i = 1; i <= k; i++) {
-            if (curPos[i] >= m-1) cnt++;
+            if (curPos[i] + 1 >= m) cnt++;
         }
 
         return cnt;
