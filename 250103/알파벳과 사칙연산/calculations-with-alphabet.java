@@ -4,11 +4,10 @@ public class Main {
 
     static char[] input;
     static int size;
-    static int max = 0;
+    static int max = Integer.MIN_VALUE;
 
     static void recur(int idx) {
         if (idx >= size) {
-            // System.out.println(input);
             int res = calculate();
             max = Math.max(max, res);
             return;
@@ -44,15 +43,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        // Please write your code here.
         Scanner sc = new Scanner(System.in);
         input = sc.next().toCharArray();
         size = input.length;
 
         recur(0);
         System.out.println(max);
-        // copy();
-        // System.out.println(tmp);
-        // System.out.println(size);
     }
 }
