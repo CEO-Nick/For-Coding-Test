@@ -25,19 +25,25 @@ public class Main {
         Point cur = grid[x][y];
         int curValue = cur.value;
         int curDir = cur.dir;
+        // System.out.println("x : " + x + "\ty : " + y);
+
         
         int nx = x; int ny = y;
         while (true) {
             nx += dxs[curDir];
             ny += dys[curDir];
 
-            // nxn 범위 안에 있고 현재 숫자보다 큰 경우 -> canGo
-            if (canGo(nx, ny, curValue)) {
-                recur(nx, ny, count + 1);
-            } else {
+            // 다음 갈 좌표가 범위 밖 -> 진행 못함 끝
+            if (!inRange(nx, ny)) {
+                // System.out.println("x : " + (x+1)+ "\ty : " + (y+1) + "\tcount : " + count);
                 max = Math.max(max, count);
                 return;
             }
+
+            // 범위 안이긴 한데, 현재 값보다 작은 경우 -> 다음 좌표로 진행
+            if (grid[nx][ny].value < curValue) continue;
+
+            recur(nx, ny, count + 1);
         }
     }
 
@@ -79,7 +85,7 @@ public class Main {
         r = Integer.parseInt(st.nextToken()) - 1;
         c = Integer.parseInt(st.nextToken()) - 1;
 
-        recur(r, c, 1);
+        recur(r, c, 0);
         System.out.println(max);
         // for (int i = 0; i < n; i++) {
         //     for (int j = 0; j < n; j++) {
