@@ -25,8 +25,6 @@ public class Main {
         Point cur = grid[x][y];
         int curValue = cur.value;
         int curDir = cur.dir;
-        // System.out.println("x : " + x + "\ty : " + y);
-
         
         int nx = x; int ny = y;
         while (true) {
@@ -35,7 +33,6 @@ public class Main {
 
             // 다음 갈 좌표가 범위 밖 -> 진행 못함 끝
             if (!inRange(nx, ny)) {
-                // System.out.println("x : " + (x+1)+ "\ty : " + (y+1) + "\tcount : " + count);
                 max = Math.max(max, count);
                 return;
             }
@@ -45,12 +42,6 @@ public class Main {
 
             recur(nx, ny, count + 1);
         }
-    }
-
-    static boolean canGo(int nx, int ny, int stdValue) {
-        if (!inRange(nx, ny)) return false;
-        if (grid[nx][ny].value < stdValue) return false;
-        return true;
     }
 
     static boolean inRange(int nx, int ny) {
@@ -87,11 +78,5 @@ public class Main {
 
         recur(r, c, 0);
         System.out.println(max);
-        // for (int i = 0; i < n; i++) {
-        //     for (int j = 0; j < n; j++) {
-        //         System.out.print(grid[i][j].value + " " + grid[i][j].dir + "\t");
-        //     }
-        //     System.out.println();
-        // }
     }
 }
