@@ -6,7 +6,12 @@ public class Main {
     static int min = Integer.MAX_VALUE;
 
     static void recur(int idx, int count, int sumA) {
-        min = Math.min(min, Math.abs(Math.abs(sumA - totalSum) - sumA));
+
+        if (count == n) min = Math.min(min, Math.abs(Math.abs(sumA - totalSum) - sumA));
+        // if (min == 0) {
+        //     System.out.println(count + "\t" + sumA);
+        // }
+        // System.out.println(min);
 
         if (idx == 2*n) return;
 
