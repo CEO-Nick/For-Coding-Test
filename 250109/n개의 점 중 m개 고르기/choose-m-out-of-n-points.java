@@ -11,11 +11,6 @@ public class Main {
             this.x = x;
             this.y = y;
         }
-
-        @Override
-        public String toString() {
-            return "Point(" + x + ", " + y + ")";
-        }
     }
 
     static ArrayList<Integer> idxList;
@@ -79,8 +74,6 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             points[i] = new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
-
-        // System.out.println(Arrays.toString(points));
         
         idxList = new ArrayList<>();
 
