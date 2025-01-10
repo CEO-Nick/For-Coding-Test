@@ -1,0 +1,65 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+    static ArrayList<Integer> order;
+    static boolean[] visited;
+    static int min = Integer.MAX_VALUE;
+
+    static void makeOrder(int idx) {
+        if (order.size() == n-1) {
+            min = Math.min(min, calc());
+            return;
+        }
+
+        for (int i = 1; i < n; i++) {
+            if (visited[i]) continue;
+
+            visited[i] = true;
+            order.add(i);
+
+            makeOrder(idx+1);
+            visited[i] = false;
+            order.remove(order.size()-1);
+        }
+    }
+
+    static int calc() {
+        order.add(0);
+        int sum = cost[0][order.get(0)];
+        for (int i = 0; i < n - 1; i++) {
+            int c = cost[order.get(i)][order.get(i+1)];
+            if (c == 0) return Integer.MAX_VALUE;
+            sum += c;
+        }
+        order.remove(order.size()-1);
+        return sum;
+    }
+
+    static int n;
+    static int[][] cost;
+
+    
+    public static void main(String[] args) throws IOException {
+        // Please write your code here.    
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        n = Integer.parseInt(br.readLine());
+        cost = new int[n][n];
+
+        StringTokenizer st;
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < n; j++) {
+                cost[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+
+        order = new ArrayList<>();
+        visited = new boolean[n];
+
+        makeOrder(0);
+        System.out.println(min);
+    }
+}
