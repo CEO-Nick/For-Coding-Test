@@ -21,6 +21,7 @@ public class Main {
             order.add(i);
 
             makeOrder(i);
+
             visited[i] = false;
             order.remove(order.size()-1);
         }
@@ -29,12 +30,12 @@ public class Main {
     static int calc() {
         order.add(0);
         int sum = cost[0][order.get(0)];
-        for (int i = 0; i < n - 1; i++) {
+        for (int i = 0; i < order.size() - 1; i++) {
             int c = cost[order.get(i)][order.get(i+1)];
-            if (c == 0) return Integer.MAX_VALUE;
+            // if (c == 0) return Integer.MAX_VALUE;
             sum += c;
         }
-        order.remove(order.size()-1);
+        order.remove(Integer.valueOf(0));
         return sum;
     }
 
