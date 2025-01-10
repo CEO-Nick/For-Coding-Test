@@ -28,14 +28,13 @@ public class Main {
     }
 
     static int calc() {
-        order.add(0);
+        if (cost[0][order.get(0)] == 0 || cost[order.get(order.size()-1)][0] == 0) return Integer.MAX_VALUE;
         int sum = cost[0][order.get(0)];
         for (int i = 0; i < order.size() - 1; i++) {
             int c = cost[order.get(i)][order.get(i+1)];
-            // if (c == 0) return Integer.MAX_VALUE;
             sum += c;
         }
-        order.remove(Integer.valueOf(0));
+        sum += cost[order.get(order.size()-1)][0];
         return sum;
     }
 
