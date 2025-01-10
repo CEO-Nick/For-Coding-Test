@@ -15,11 +15,12 @@ public class Main {
 
         for (int i = 1; i < n; i++) {
             if (visited[i]) continue;
+            if (cost[idx][i] == 0) continue;
 
             visited[i] = true;
             order.add(i);
 
-            makeOrder(idx+1);
+            makeOrder(i);
             visited[i] = false;
             order.remove(order.size()-1);
         }
