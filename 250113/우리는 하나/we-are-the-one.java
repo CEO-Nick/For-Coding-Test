@@ -45,7 +45,7 @@ public class Main {
                 if (curVisited[nx][ny]) {
                     continue;
                 }
-
+                
                 int diff = Math.abs(cur.value - grid[nx][ny]);
                 if (u <= diff && diff <= d) {
                     curVisited[nx][ny] = true;
@@ -55,6 +55,7 @@ public class Main {
             }
         }
 
+        // (x, y) 도시에서 방문 가능한 도시의 개수 반환
         return count;
     }
 
@@ -113,6 +114,7 @@ public class Main {
                 for (int j = 0; j < n; j++) {
                     if (!visited[i][j]) {
                         int res = BFS(i, j);
+                        // 도시 개수 최대일 때, curVisted -> visited로 복사
                         if (res > maxCount) {
                             copyCur();
                             maxCount = res;
