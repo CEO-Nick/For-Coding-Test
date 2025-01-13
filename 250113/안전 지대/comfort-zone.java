@@ -33,7 +33,6 @@ public class Main {
     static int[][] grid;
     static boolean[][] visited;
     static int curRain;
-    static int minH = Integer.MAX_VALUE;
     static int maxH = Integer.MIN_VALUE;
     
     public static void main(String[] args) throws IOException {
@@ -53,7 +52,6 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
                 int h = Integer.parseInt(st.nextToken());
-                minH = Math.min(minH, h);
                 maxH = Math.max(maxH, h);
                 grid[i][j] = h;
             }
@@ -62,7 +60,7 @@ public class Main {
         int[] answer = new int[maxH+1];
         int maxArea = Integer.MIN_VALUE;
 
-        for (int k = minH; k <= maxH; k++) {
+        for (int k = 1; k <= maxH; k++) {
             curRain = k;
             int area = 0;
             visited = new boolean[n][m];
@@ -78,7 +76,7 @@ public class Main {
             answer[k] = area;
         }
         
-        for (int i = minH; i <= maxH; i++) {
+        for (int i = 1; i <= maxH; i++) {
             if (answer[i] == maxArea) {
                 System.out.println(i + " " + answer[i]);
                 return;
