@@ -13,43 +13,34 @@ public class Main {
             this.order = order;
         }
 
-        // @Override
-        // public boolean equals(Object o) {
-        //     if (this == o) {
-        //         return true;
-        //     }
-        //     if (o == null || getClass() != o.getClass()) {
-        //         return false;
-        //     }
-        //     Point point = (Point) o;
-        //     return x == point.x && y == point.y;
-        // }
+        // set 자료구조를 위해 선언
+        // 이걸 선언해야 Point p1 = new Point(1, 1, 0);     Point p2 = new Point(1, 1, -1); => Hash 자료구조에서 이 두 Point가 같다고 판단할 수 있다
+        // 우리는 좌표만 판단할거니깐 order은 동등성 비교에서 제외
 
-        // @Override
-        // public int hashCode() {
-        //     return Objects.hash(x, y);
-        // }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Point point = (Point) o;
+            return x == point.x && y == point.y;
+        }
 
-        // @Override
-        // public String toString() {
-        //     return "Point{" +
-        //         "x=" + x +
-        //         ", y=" + y +
-        //         ", order=" + order +
-        //         '}';
-        // }
-        
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
     }
-
-    static Set<Point> choseWalls;
-    static boolean[] chose;
-    static int ans = Integer.MAX_VALUE;
-
+    
+    // x개의 벽들 중에서 k개 벽 선택
     static void choose(int idx, int count) {
+        // k개 벽 선택되면 BFS 진행
         if (count == k) {
             int res = BFS();
             ans = Math.min(ans, res);
-            // System.out.println(choseWalls);
             return;
         }
 
@@ -68,6 +59,7 @@ public class Main {
         }
     }
 
+    // 시작 좌표에서부터 BFS 시작
     static int BFS() {
         Queue<Point> q = new ArrayDeque<>();
         q.add(start);
@@ -78,7 +70,7 @@ public class Main {
         while (!q.isEmpty()) {
             Point cur = q.poll();
 
-            if (cur.x == end.x && cur.y == end.y) {
+            if (cur.equals(end)) {
                 return cur.order;
             }
 
@@ -88,12 +80,13 @@ public class Main {
                 if (canGo(nx, ny)) {
                     // 다음 좌표가 벽인 경우
                     if (grid[nx][ny] == 1) {
+                        // 선택된 벽이라면 계속 탐색
                         if (choseWalls.contains(new Point(nx, ny, 0))) {
                             visited[nx][ny] = true;
                             q.add(new Point(nx, ny, cur.order + 1));
                         }
-                        // 현재 찬스가 0개 이하라면 더이상 진행할 수 없음
                     } else {
+                        // 벽 아니면 계속 탐색 진행
                         visited[nx][ny] = true;
                         q.add(new Point(nx, ny, cur.order + 1));
                     }
@@ -101,9 +94,11 @@ public class Main {
             }
         }
 
+        // end 좌표에 도달하지 못한 경우
         return Integer.MAX_VALUE;
     }
 
+    // 범위 안에 있고 방문한 적 없는지 판단
     static boolean canGo(int nx, int ny) {
         if (!inRange(nx, ny)) return false;
 
@@ -112,6 +107,7 @@ public class Main {
         return true;
     }
 
+    // n * n 범위 안에 있는지 판단
     static boolean inRange(int nx, int ny) {
         return 0 <= nx && nx < n && 0 <= ny && ny < n;
     }
@@ -123,16 +119,17 @@ public class Main {
     static int n;
     static int k;
     static int[][] grid;
-    static boolean[][] visited;
+    static boolean[][] visited; // BFS에서 사용될 방문 체크 배열
     static Point start;
     static Point end;
-    static ArrayList<Point> walls;
+
+    static ArrayList<Point> walls;  // 벽 좌표 리스트
+    static Set<Point> choseWalls;   // 선택된 k개의 벽 리스트
+    static boolean[] chose;         // backtracking에서 선택 유무 확인을 위한 배열
+    static int ans = Integer.MAX_VALUE; // 걸린 시간(답)
 
     public static void main(String[] args) throws IOException {
         // Please write your code here.
-        // 0 : 이동 가능
-        // 1 : 벽 
-            
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
@@ -157,8 +154,10 @@ public class Main {
         choseWalls = new HashSet<>();
         chose = new boolean[walls.size()];
 
+        // k개의 벽 선택 후, BFS 진행
         choose(0, 0);
 
+        // 한번도 값이 바뀐 적이 없다면 도달할 수 없는 경우임
         System.out.println(ans == Integer.MAX_VALUE ? -1 : ans);
     }
 }
