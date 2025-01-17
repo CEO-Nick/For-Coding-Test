@@ -20,11 +20,10 @@ public class Main {
 
                 if (next < 1) continue;
                 if (next > n * 3) continue;
+
                 if (answer[next] == 0) {
                     q.add(next);
                     answer[next] = answer[cur] + 1;
-                } else {
-                    answer[next] = Math.min(answer[next], answer[cur] + 1);
                 }
             }
         }
