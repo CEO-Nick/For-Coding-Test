@@ -33,15 +33,15 @@ public class Main {
 
     static int[] d = new int[] {1, -1, 2, 3};
     static int n;
-    static int MAX_VALUE = 1000001 * 3;
-    static int[] answer = new int[MAX_VALUE];
+    // static int MAX_VALUE = 1000001 * 3;
+    static int[] answer;
     public static void main(String[] args) throws IOException {
         // Please write your code here.    
         // -1   +1  짝수 -> /2  홀수 -> /3
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         // 역으로 1에서 시작해서 덧셈 뺄셈 곱셉하기...?
         n = Integer.parseInt(br.readLine());    
-
+        answer = new int[n+2];
         BFS();
 
         System.out.println(answer[n]);
