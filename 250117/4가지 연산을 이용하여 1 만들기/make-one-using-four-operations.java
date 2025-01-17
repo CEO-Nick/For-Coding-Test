@@ -19,7 +19,7 @@ public class Main {
                 else next = cur * d[i];
 
                 if (next < 1) continue;
-                if (next > n * 3) continue;
+                if (next > n + 1) continue;
 
                 if (answer[next] == 0) {
                     q.add(next);
