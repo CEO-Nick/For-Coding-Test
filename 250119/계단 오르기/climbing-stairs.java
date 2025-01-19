@@ -6,16 +6,14 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         int n = sc.nextInt();
-        int[] dp = new int[1010];
-        dp[3] = 1;
-        dp[2] = 1;
-        dp[1] = 0;
-        dp[0] = 0;
+        long[] dp = new long[1010];
+        dp[3] = 1L;
+        dp[2] = 1L;
         
         for (int i = 4; i <= 1000; i++) {
-            dp[i] = (dp[i-2] + dp[i-3]) % 10007;
+            dp[i] = (dp[i-2] + dp[i-3]);
         }
 
-        System.out.println(dp[n]);
+        System.out.println(dp[n] % 10007);
     }
 }
