@@ -9,20 +9,39 @@ public class Main {
     static int[] dys = new int[] {0, 1};
 
     static void path(int curx, int cury, int min) {
+        // System.out.println("(" + curx + ", " + cury + ") : "  + min);
         if (curx == n-1 && cury == n-1) {
             max = Math.max(max, min);
             return;
         }
 
-        for (int i = 0; i < 2; i++) {
-            int nx = curx + dxs[i], ny = cury + dys[i];
+        int downX = curx + dxs[0], downY = cury + dys[0];
+        int rightX = curx + dxs[1], rightY = cury + dys[1];
 
-            if (inRange(nx, ny)) {
-                int curMin = Math.min(min, grid[nx][ny]);
-                path(nx, ny, curMin);
+        if (inRange(downX, downY) && inRange(rightX, rightY)) {
+            if (grid[downX][downY] > grid[rightX][rightY]) {
+                int curMin = Math.min(min, grid[downX][downY]);
+                path(downX, downY, curMin);
+            } 
+            else if (grid[downX][downY] < grid[rightX][rightY]) {
+                int curMin = Math.min(min, grid[rightX][rightY]);
+                path(rightX, rightY, curMin);
+            } else {
+                int curMin = Math.min(min, grid[downX][downY]);
+                path(downX, downY, curMin);
+                path(rightX, rightY, curMin);
             }
-        }
+        } 
+        else if (inRange(downX, downY)) {
+            int curMin = Math.min(min, grid[downX][downY]);
+            path(downX, downY, curMin);
 
+        } 
+        else if (inRange(rightX, rightY)) {
+            int curMin = Math.min(min, grid[rightX][rightY]);
+            path(rightX, rightY, curMin);
+        } 
+        
     }
 
     static boolean inRange(int nx, int ny) {
