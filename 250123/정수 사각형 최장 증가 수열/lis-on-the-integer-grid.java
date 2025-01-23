@@ -2,38 +2,23 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static class Point {
+    static class Point implements Comparable<Point> {
         int x;
         int y;
-        int move;
+        int value;
         
-        Point(int x, int y, int move) {
+        Point(int x, int y, int value) {
             this.x = x;
             this.y = y;
-            this.move = move;
+            this.value = value;
+        }   
+
+        @Override
+        public int compareTo(Point p) {
+            return this.value - p.value;
         }
     }
 
-
-    static void BFS(int x, int y) {
-        Queue<Point> q = new ArrayDeque<>();
-        q.add(new Point(x, y, 1));
-        visited = new boolean[n][n];
-        visited[x][y] = true;
-
-        while (!q.isEmpty()) {
-            Point cur = q.poll();
-            answer = Math.max(answer, cur.move);
-            int curVal = grid[cur.x][cur.y];
-
-            for (int i = 0; i < 4; i++) {
-                int nx = cur.x + dxs[i], ny = cur.y + dys[i];
-                if (inRange(nx, ny) && grid[nx][ny] > curVal) {
-                    q.add(new Point(nx, ny, cur.move + 1));
-                }
-            }
-        }
-    }
 
     static boolean inRange(int nx, int ny) {
         return 0 <= nx && nx < n && 0 <= ny && ny < n;
@@ -43,8 +28,9 @@ public class Main {
     static int[] dys = new int[] {0, 1, 0, -1};
     static int n;
     static int[][] grid;
-    static boolean[][] visited;
+    static int[][] dp;
     static int answer = Integer.MIN_VALUE;
+    static ArrayList<Point> points;
 
     public static void main(String[] args) throws IOException {
         // Please write your code here.    
@@ -60,13 +46,40 @@ public class Main {
             }
         }
 
+        points = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                BFS(i, j);
+                points.add(new Point(i, j, grid[i][j]));
             }
         }
 
-        System.out.println(answer);
+        // dp 값 초기화
+        dp = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = 1;
+            }
+        }
+
+        // 값으로 오름차순 정렬
+        Collections.sort(points);
+
+        int ans = 0;
+        // 값이 제일 작은 좌표에서부터 4방향에 대해 dp 값 갱신
+        for (int i = 0; i < points.size(); i++) {
+            int cur_x = points.get(i).x;
+            int cur_y = points.get(i).y;
+
+            for (int j = 0; j < 4; j++) {
+                int nx = cur_x + dxs[j], ny = cur_y + dys[j];
+                if (inRange(nx, ny) && grid[nx][ny] > grid[cur_x][cur_y]) {
+                    dp[nx][ny] = Math.max(dp[nx][ny], dp[cur_x][cur_y] + 1);
+                    ans = Math.max(ans, dp[nx][ny]);
+                }
+            }
+        }
+
+        System.out.println(ans);
 
     }
 }
