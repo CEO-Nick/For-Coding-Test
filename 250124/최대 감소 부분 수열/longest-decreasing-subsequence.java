@@ -5,7 +5,7 @@ public class Main {
     
     static int n;
     static int[] arr;
-    
+
     public static void main(String[] args) throws IOException {
         // Please write your code here.    
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -37,7 +37,7 @@ public class Main {
             }
         }
 
-        int ans = INT_MIN;
+        int ans = -1;
         for (int i = 0; i < n; i++) {
             ans = Math.max(ans, dp[i]);
         }
