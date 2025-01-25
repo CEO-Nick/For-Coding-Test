@@ -39,18 +39,19 @@ public class Main {
                 dp[i] = dp[i-1];
                 continue;
             } 
-
-            for (int start : list[i]) {
-                dp[i] = Math.max(dp[i-1], dp[start-1] + 1);
-            }
             
+            int max = -1;
+            for (int start : list[i]) {
+                max = Math.max(Math.max(dp[i-1], dp[start-1] + 1), max);
+            }
+            dp[i] = max;
         } 
 
-        int max = -1;
+        int ans = -1;
         for (int i = 1; i <= maxEnd; i++) {
-            max = Math.max(max, dp[i]);
+            ans = Math.max(ans, dp[i]);
         }
 
-        System.out.println(max);
+        System.out.println(ans);
     }
 }
