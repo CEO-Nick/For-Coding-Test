@@ -9,8 +9,8 @@ public class Main {
         
         int n = Integer.parseInt(br.readLine());
         int[] arr = new int[n];
-        int[] dp_asc = new int[n];
-        int[] dp_desc = new int[n];
+        int[] dp_asc = new int[n];  // i번째까지 가장 긴 증가 부분 수열의 길이
+        int[] dp_desc = new int[n]; // i번째까지 가장 긴 감소 부분 수열의 길이
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) {
@@ -41,6 +41,7 @@ public class Main {
 
         int ans = -1;
         for (int i = 0; i < n; i++) {
+            // 각 index에 대해서 증가 부분 수열 길이 + 감소 부분 수열 길이 - 1(현재 index가 2번 포함되서 1번은 제외해야 함)
             ans = Math.max(ans, dp_asc[i] + dp_desc[i] - 1);
         }
 
