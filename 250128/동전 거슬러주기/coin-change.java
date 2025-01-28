@@ -25,6 +25,7 @@ public class Main {
         dp[0] = 0;
 
         for (int i = 0; i <= m; i++) {
+            if (dp[i] == Integer.MAX_VALUE) continue;
             for (int j = 0; j < n; j++) {
                 if (i + type[j] <= m) {
                     dp[i + type[j]] = Math.min(dp[i + type[j]], dp[i] + 1);
