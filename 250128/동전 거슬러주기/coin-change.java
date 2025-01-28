@@ -18,6 +18,7 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) {
             type[i] = Integer.parseInt(st.nextToken());
+            if (type[i] > m) continue;
             dp[type[i]] = 1;
         }
 
@@ -33,6 +34,6 @@ public class Main {
             }
         }
 
-        System.out.println(dp[m]);
+        System.out.println(dp[m] != Integer.MAX_VALUE ? dp[m] : -1);
     }
 }
