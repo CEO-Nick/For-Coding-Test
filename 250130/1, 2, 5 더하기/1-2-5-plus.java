@@ -19,11 +19,11 @@ public class Main {
         for (int i = 3; i <= n; i++) {
             for (int j = 0; j < 3; j++) {
                 if (i - type[j] >= 0) {
-                    dp[i] += dp[i-type[j]];
+                    dp[i] += (dp[i-type[j]] % 10007);
                 }
             }
         }
 
-        System.out.println(dp[n]);
+        System.out.println(dp[n] % 10007);
     }
 }
