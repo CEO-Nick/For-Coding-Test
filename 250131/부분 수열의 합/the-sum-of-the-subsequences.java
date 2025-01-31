@@ -33,8 +33,7 @@ public class Main {
                 }
             }
         }
-
-        System.out.println(dp[m] == Integer.MIN_VALUE ? "No" : "Yes");
+        System.out.println(dp[m] < 0 ? "No" : "Yes");
 
     }
 }
