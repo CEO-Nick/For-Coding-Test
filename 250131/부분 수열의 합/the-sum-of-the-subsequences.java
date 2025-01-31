@@ -28,7 +28,9 @@ public class Main {
 
         for (int i = 0; i < n; i++) {
             for (int j = m; j >= 0; j--) {
+                // 현재 만들려는 합(j)가 현재 수열의 값보다 크거나 같아야 함
                 if (j - arr[i] >= 0) {
+                    // j를 만들 수 있는 방법 = (j를 만들 수 있는 방법) VS (j-arr[i] 를 만들 수 있는 방법에 arr[i]를 더한 경우)
                     dp[j] = Math.max(dp[j], dp[j-arr[i]] + 1);
                 }
             }
