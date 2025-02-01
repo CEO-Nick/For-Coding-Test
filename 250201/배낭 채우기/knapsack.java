@@ -17,7 +17,7 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             w[i] = Integer.parseInt(st.nextToken());
             v[i] = Integer.parseInt(st.nextToken());
-            dp[w[i]] = v[i];
+            if (w[i] <= m) dp[w[i]] = v[i];
         }
 
         for (int i = 0; i < n; i++) {
