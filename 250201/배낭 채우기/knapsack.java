@@ -20,13 +20,14 @@ public class Main {
             if (w[i] <= m) dp[w[i]] = v[i];
         }
 
-        for (int i = 0; i < n; i++) {
-            int curW = w[i];
-            int curV = v[i];
+        for (int i = 1; i <= m; i++) {
+            dp[i] = Integer.MIN_VALUE;
+        }
 
-            for (int j = 0; j < i; j++) {
-                if (curW + w[j] <= m) {
-                    dp[curW + w[j]] = Math.max(dp[curW + w[j]], curV + v[j]); 
+        for (int i = 0; i < n; i++) {
+            for (int wei = m; wei >= 0; wei--) {
+                if (wei - w[i] >= 0) {
+                    dp[wei] = Math.max(dp[wei - w[i]] + v[i], dp[wei]);
                 }
             }
         }
@@ -35,7 +36,6 @@ public class Main {
         for (int i = 0; i <= m; i++) {
             ans = Math.max(ans, dp[i]);
         }
-
         System.out.println(ans);
     }
 }
