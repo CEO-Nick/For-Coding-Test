@@ -34,7 +34,7 @@ public class Main {
             ans = Math.max(ans, dp[i]);
         }
 
-        System.out.println(ans);
+        System.out.println(dp[n]);
 
     }
 }
