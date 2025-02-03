@@ -28,12 +28,6 @@ public class Main {
             }
         }
 
-        // System.out.println(Arrays.toString(dp));
-        int ans = 0;
-        for (int i = 0; i <= n; i++) {
-            ans = Math.max(ans, dp[i]);
-        }
-
         System.out.println(dp[n]);
 
     }
