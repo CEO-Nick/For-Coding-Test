@@ -20,7 +20,7 @@ public class Main {
         }
         
         int[] dp = new int[m+1];
-        for (int i = 1; i <= n; i++) {
+        for (int i = 1; i <= m; i++) {
             dp[i] = Integer.MIN_VALUE;
         }
 
