@@ -2,73 +2,12 @@ import java.util.*;
 
 class Solution {
     
-    static class Point {
-        int x;
-        int y;
-        int move;
-        String path;
-        
-        Point(int x, int y, int move, String path) {
-            this.x = x;
-            this.y = y;
-            this.move = move;
-            this.path = path;
-        }
-        
-        @Override
-        public String toString() {
-          return "Relative{" +
-              "x=" + x +
-              ", y=" + y +
-              ", move=" + move +
-              ", path='" + path + '\'' +
-              '}';
-        }
-    }
-    
-    // index 0 = d, 1 = l, 2 = r, 3 = u
-    static int[] dxs = new int[] {1, 0, 0, -1};
-    static int[] dys = new int[] {0, -1, 1, 0};
-    static String answer;
-    
-    static void BFS(int startX, int startY) {
-        ArrayDeque<Point> q = new ArrayDeque<>();
-        q.add(new Point(startX, startY, 0, ""));
-        
-        while (!q.isEmpty()) {
-            Point cur = q.poll();
-            // System.out.println(cur);
-            
-            if (cur.move == K && cur.x == R && cur.y == C) {
-                answer = cur.path;
-                break;
-            } 
-            
-            if (cur.move >= K) continue;
-            
-            
-            for (int i = 0; i < 4; i++) {
-                int nx = cur.x + dxs[i], ny = cur.y + dys[i];
-                if (inRange(nx, ny)) {
-                    q.add(new Point(nx, ny, cur.move + 1, cur.path + direction.get(i)));
-                }
-            }
-        }
-    }
-    
-    // 격자 안에 있는지
-    public static boolean inRange(int nx, int ny) {
-        return 0 <= nx && nx < N && 0 <= ny && ny < M;
-    }
-    
-    static int[][] maze;
     static int K;
     static int N;
     static int M;
     static int R;
     static int C;
     
-    static HashMap<Integer, String> direction;
     
     public String solution(int n, int m, int x, int y, int r, int c, int k) {
         
