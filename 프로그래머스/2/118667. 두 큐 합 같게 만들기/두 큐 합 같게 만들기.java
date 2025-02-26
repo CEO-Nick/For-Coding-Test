@@ -6,9 +6,10 @@ class Solution {
         long sum = 0L;
         long sum1 = 0L;
         long sum2 = 0L;
+        int len = queue1.length;
         Queue<Integer> q1 = new ArrayDeque<>();
         Queue<Integer> q2 = new ArrayDeque<>();
-        for (int i = 0; i < queue1.length; i++) {
+        for (int i = 0; i < len; i++) {
             sum += queue1[i] + queue2[i];
             sum1 += queue1[i];
             sum2 += queue2[i];
@@ -24,7 +25,7 @@ class Solution {
                 return count;
             }
             
-            if (count > 600000) return -1;
+            if (count > len * 3) return -1;
             
             if (sum1 > std) {
                 num = q1.poll();
