@@ -25,7 +25,7 @@ class Solution {
                 return count;
             }
             
-            if (count > len * 3) return -1;
+            if (count > 600000) return -1;
             
             if (sum1 > std) {
                 num = q1.poll();
