@@ -1,6 +1,8 @@
 -- 코드를 입력하세요
-SELECT I.FLAVOR
-FROM ICECREAM_INFO I
-JOIN FIRST_HALF F ON I.FLAVOR = F.FLAVOR
-WHERE TOTAL_ORDER > 3000 AND INGREDIENT_TYPE = 'fruit_based'
-ORDER BY TOTAL_ORDER DESC;
+-- 총주문량이 3,000보다 높음 && 아이스크림의 주 성분이 과일
+-- 정렬 : 총주문량 내림차순
+select f.FLAVOR 
+from FIRST_HALF as f
+inner join ICECREAM_INFO as i on i.FLAVOR = f.FLAVOR
+where f.TOTAL_ORDER > 3000 and i.INGREDIENT_TYPE = 'fruit_based'
+order by f.TOTAL_ORDER desc;
