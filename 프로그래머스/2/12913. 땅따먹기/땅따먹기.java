@@ -10,20 +10,14 @@ class Solution {
         for (int j = 0; j < 4; j++) dp[0][j] = land[0][j];
         
         for (int i = 1; i < n; i++) {
-            for (int j = 0; j < 4; j++) {
-                int max = 0;
-                for (int k = 0; k < 4; k++) {
-                    if (j == k) continue;
-                    max = Math.max(max, dp[i-1][k]);
-                }
-                
-                dp[i][j] = max + land[i][j];
-            }
-            
+            land[i][0] += Math.max(Math.max(land[i-1][1], land[i-1][2]), land[i-1][3]);
+            land[i][1] += Math.max(Math.max(land[i-1][0], land[i-1][2]), land[i-1][3]);
+            land[i][2] += Math.max(Math.max(land[i-1][1], land[i-1][0]), land[i-1][3]);
+            land[i][3] += Math.max(Math.max(land[i-1][1], land[i-1][2]), land[i-1][0]);
         }
         
         int answer = -1;
-        for (int j = 0; j < 4; j++) answer = Math.max(answer, dp[n-1][j]);
+        for (int j = 0; j < 4; j++) answer = Math.max(answer, land[n-1][j]);
         
         return answer;
     }
