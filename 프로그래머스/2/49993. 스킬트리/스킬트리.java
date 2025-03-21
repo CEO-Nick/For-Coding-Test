@@ -4,33 +4,31 @@ class Solution {
     public int solution(String skill, String[] skill_trees) {
         int answer = 0;
         
-        HashMap<Character, Integer> skillMap = new HashMap<>();
-        for (int i = 0; i < skill.length(); i++) {
-            skillMap.put(skill.charAt(i), 1);
-        }
+        HashSet<Character> set = new HashSet<>();
+        StringBuilder sb;
         
-        ArrayList<Character> stack = new ArrayList<>();
+        for (int i = 0; i < skill.length(); i++) set.add(skill.charAt(i));
+        
         for (int i = 0; i < skill_trees.length; i++) {
-            boolean possible = true;
-            for (int j = 0; j < skill_trees[i].length(); j++) {
+            sb = new StringBuilder();
+            for (int j = 0; j < skill_trees[i].length(); j++) {    
                 char sk = skill_trees[i].charAt(j);
-                if (skillMap.containsKey(sk)) stack.add(sk);
+                if (set.contains(sk)) sb.append(sk);
             }
             
-            int loop = Math.min(stack.size(), skill.length());
-            for (int k = 0; k < loop; k++) {
-                if (stack.get(k) != skill.charAt(k)) {
-                    possible = false;
-                    break;
-                }
-            }
-            
-            if (possible) answer++;
-            
-            stack.clear();
+            answer += checkSkillTree(skill, sb.toString()) ? 1 : 0;
         }
-        
         
         return answer;
+    }
+    
+    public static boolean checkSkillTree(String skill, String skillTree) {
+        int len = Math.min(skill.length(), skillTree.length());
+        
+        for (int i = 0; i < len; i++) {
+            if (skill.charAt(i) != skillTree.charAt(i)) return false;
+        }
+        
+        return true;
     }
 }
