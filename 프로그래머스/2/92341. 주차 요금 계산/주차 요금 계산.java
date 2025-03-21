@@ -1,97 +1,58 @@
 import java.util.*;
-// import java.Math.*;
+import java.util.Map.Entry;
 
 class Solution {
-    public HashMap<String, String> inMap = new HashMap<>();
-    public HashMap<String, Integer> accumulatedTime = new HashMap<>();
-    public TreeMap<String, Integer> feeMap = new TreeMap<>();
-    
     public int[] solution(int[] fees, String[] records) {
-        // 입차만 하고 출차 기록 없으면 23:59에 출차한걸로 간주
-        // 차량별 누적 주차 시간 계산 -> 요금 계산
-        // 기본 시간(180분) "이하" -> 5000원
-        // 기본 시간 "초과" -> 5000 + 단위 요금 청구
-            // 초과 시간이 15분 -> [11 / 10] = 2  (올림)
-                
-        // 누적 주차 시간 계산
+        HashMap<String, Integer> inOut = new HashMap<>();
+        TreeMap<String, Integer> parkTime = new TreeMap<>();
+        
+        String[] rec;
         for (String record : records) {
-            calcAccTime(record);
+            // 0: 시간 / 1: 차번호 / 2: in or out
+            rec = record.split(" ");
+            
+            // inOut에 차 번호 있으면 입차한 기록이 이미 있고, 현재는 출차하려는 것 -> 누적 주차 시간 기록
+            if (inOut.containsKey(rec[1])) {
+                int in = inOut.get(rec[1]);
+                int out = toMinute(rec[0]);
+                int time = parkTime.getOrDefault(rec[1], 0);
+                parkTime.put(rec[1], time + (out - in));
+                inOut.remove(rec[1]);
+            } else {    // inOut에 차 번호 없으면 현재는 입차하려는 것 -> 입차 기록하기
+                inOut.put(rec[1], toMinute(rec[0]));
+            }
         }
         
-        // 출차 안한 차량 주차 시간 계산
-        calcRemain();
-        
-        // 주차 요금 계산
-        calcFee(fees);
-        
-        // 차량 번호 순으로 오름차순 출력
-        int[] answer = new int[feeMap.size()];
-        int idx = 0;
-        for (String key : feeMap.keySet()) {
-            answer[idx++] = feeMap.get(key);
+        // 입차 기록만 있는 차량들의 주차 시간 계산
+        int endTime = toMinute("23:59");
+        for (Entry<String, Integer> entry : inOut.entrySet()) {
+            int diff = (endTime - entry.getValue());
+            int time = parkTime.getOrDefault(entry.getKey(), 0);
+            parkTime.put(entry.getKey(), time + diff);
         }
         
+        // 누적 주차 시간으로 차량별 주차 요금 계산
+        List<Integer> ans = new ArrayList<>();
+        for (Entry<String, Integer> entry : parkTime.entrySet()) {
+            ans.add(calculateFee(fees, entry.getValue()));
+        }
+        
+        
+        int[] answer = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) answer[i] = ans.get(i);
         return answer;
     }
     
-    // 누적 주차 시간 계산
-    public void calcAccTime(String record) {
-        String[] rs = record.split(" ");
-        // rs[0] : 시간   rs[1] : 차량번호    rs[2] : IN or OUT
-        if (rs[2].equals("IN")) {
-            inMap.put(rs[1], record);
-        }
-        else {
-            String entrance = inMap.get(rs[1]).split(" ")[0];
-            String exit = rs[0];
-            
-            // 주차 시간 계산
-            int diffMin = calcDiffMin(entrance, exit);
-            
-            // 주차 시간 누적
-            accumulatedTime.put(rs[1], accumulatedTime.getOrDefault(rs[1], 0) + diffMin);
-            
-            inMap.remove(rs[1]);
-        }
-        
+    // 10:54 문자열 시간을 분으로 변환
+    public static int toMinute(String time) {
+        int hour = Integer.valueOf(time.substring(0,2));
+        int minute = Integer.valueOf(time.substring(3,5));
+        return hour * 60 + minute;
     }
     
-    // 두 문자열 시간의 분 차이 계산
-    public int calcDiffMin(String en, String ex) {
-        String inHour = en.split(":")[0];
-        String inMin = en.split(":")[1];
-        
-        int enMin = Integer.parseInt(inHour) * 60 + Integer.parseInt(inMin);
-        
-        String outHour = ex.split(":")[0];
-        String outMin = ex.split(":")[1];
-        
-        int exMin = Integer.parseInt(outHour) * 60 + Integer.parseInt(outMin);
-        
-        return exMin - enMin;
+    // 요금표와 누적 주차시간으로 주차 요금 계산
+    public static int calculateFee(int[] fees, int time) {
+        if (time <= fees[0]) return fees[1];
+        else return fees[1] + (int)(Math.ceil((time - fees[0]) / (double)fees[2])) * fees[3];
     }
-    
-    // 입차만 한 차량 출차 기록
-    public void calcRemain() {
-        for (String key : inMap.keySet()) {
-            int diffMin = calcDiffMin(inMap.get(key).split(" ")[0], "23:59");
-            accumulatedTime.put(key, accumulatedTime.getOrDefault(key, 0) + diffMin);   
-        }
-    }
-    
-    // 누적 요금 계산
-    public void calcFee(int[] fees) {
-        int fee = 0;
-        for( Map.Entry<String, Integer> elem : accumulatedTime.entrySet()) {
-            String key = elem.getKey();
-            int diffMin = elem.getValue();
-            if (diffMin <= fees[0]) {
-                fee = fees[1];
-            } else {
-                int over = diffMin - fees[0];
-                fee = fees[1] + ((int)(Math.ceil((double)over/fees[2])) * fees[3]);
-            }
-            feeMap.put(key, feeMap.getOrDefault(key, 0) + fee);
-        }        
-    }       
 }
