@@ -1,48 +1,55 @@
 import java.util.*;
 
 class Solution {
-    
-    static HashSet<Integer> ans = new HashSet<>();
-    static boolean[] visited;
-    static String target;
+    static int STOP;
+    static String num;
+    static int N;
+    static HashSet<Integer> set;
     
     public int solution(String numbers) {
+        set = new HashSet<>();
+        N = numbers.length();
+        int answer = 0;
+        num = numbers;
+        visited = new boolean[N];
         
-        visited = new boolean[numbers.length()];
-        target = numbers;
+        // 1자리 숫자부터 N자리 숫자까지 가능한 모든 숫자 조합 만들기 
+        for (int i = 1; i <= N; i++) {
+            STOP = i;
+            choose(0, "");
+        }    
         
-        dfs("", 0);
+        List<Integer> list = new ArrayList<>(set);
+        for (int n : list) answer += isPrime(n) ? 1 : 0;
         
-        return ans.size();
+        return answer;
     }
     
-    static void dfs(String temp, int depth) {
-        if (!temp.equals("")) {
-            int n = Integer.parseInt(temp);
-            if (isPrime(n)) ans.add(n);
+    static boolean[] visited;
+    public static void choose(int cnt, String str) {
+        if (cnt == STOP) {
+            set.add(Integer.valueOf(str));
+            return;
         }
         
-        if (depth > target.length()) return;
-        
-        for (int i = 0; i < target.length(); i++) {
-            if (!visited[i]) {
-                visited[i] = true;
-                dfs(temp + target.charAt(i), depth + 1);
-                visited[i] = false;
-            }
-        }
-        
+        for (int i = 0; i < N; i++) {
+            if (visited[i]) continue;
+            
+            str += num.charAt(i);
+            visited[i] = true;
+            
+            choose(cnt+1, str);
+            str = str.substring(0, str.length()-1);
+            visited[i] = false;
+        }   
     }
     
-    static boolean isPrime(int num) {
-        if (num == 0 || num == 1) return false;
+    public static boolean isPrime(int num) {
+        if (num <= 1) return false;
         
-        for (int i = 2; i <= (int) Math.sqrt(num); i++) {
-            if (num % i == 0) {
-                return false;
-            }
+        for (int i = 2; i < (int)(Math.sqrt((double)num) + 1.0); i++) {
+            if (num % i == 0) return false;
         }
-        
         return true;
     }
 }
