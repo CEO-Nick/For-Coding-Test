@@ -13,12 +13,8 @@ class Solution {
                 answer += (10 - remain);
                 storey++;
             } else { 
-                if (storey % 10 < 5) {
-                    answer += remain;
-                } else {
-                    answer += (10 - remain);
-                    storey++;
-                }
+                answer += remain;
+                if (storey % 10 >= 5) storey++;
             }
         }
         return answer;
