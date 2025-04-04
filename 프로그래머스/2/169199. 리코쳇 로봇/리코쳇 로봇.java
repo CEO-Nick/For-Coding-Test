@@ -13,10 +13,6 @@ class Solution {
             this.cnt = cnt;
             this.dir = dir;
         }
-        
-        public String toString() {
-            return "( " + x + ", " + y + ", " + dir + ", " + cnt + ")";
-        }
     }
     
     static int N;
@@ -29,6 +25,7 @@ class Solution {
     static int[] dys = new int[] {0, 1, 0, -1};
     
     static int answer = -1;
+    
     public int solution(String[] board) {
         N = board.length;
         M = board[0].length();
@@ -61,8 +58,8 @@ class Solution {
         while (!q.isEmpty()) {
             Point cur = q.poll();
             if (cur.x == end.x && cur.y == end.y) {
-                answer = Math.max(answer, cur.cnt);
-                continue;
+                answer = cur.cnt;
+                return;
             }
             
             int curx = cur.x;
@@ -80,7 +77,6 @@ class Solution {
             if (visited[curx][cury]) continue;
             
             visited[curx][cury] = true;
-            // System.out.println("STOP: " + curx + ", " + cury);
             
             if (d % 2 == 0) {
                 q.add(new Point(curx, cury, cur.cnt + 1, 1));
