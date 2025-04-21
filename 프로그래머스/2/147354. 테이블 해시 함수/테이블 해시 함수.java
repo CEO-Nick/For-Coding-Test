@@ -35,7 +35,8 @@ class Solution {
     
     public static int calc(int row) {
         int sum = 0;
-        for (int j = 0; j < table[row].length; j++) sum += (table[row][j] % (row+1));
+        for (int j = 0; j < table[row].length; j++) 
+            sum += (table[row][j] % (row+1));
         
         return sum;
     }
