@@ -11,16 +11,13 @@ class Solution {
             total = t;
         }
         
+        // 가입자 수 내림차순 > 판매액 내림차순
         public int compareTo(Object o) {
             Result result = (Result) o;
             if (this.newSubs == result.newSubs) {
                 return result.total - this.total;
             }
             return result.newSubs - this.newSubs;
-        }
-        
-        public String toString() {
-            return "(" + newSubs + ", " + total + ")";
         }
     }
     
@@ -46,6 +43,7 @@ class Solution {
     // 각 이모티콘에 적용될 할인율 list
     static ArrayList<Integer> chosenDiscountRate;
     
+    // 각 임티에 적용될 할인율 배정하고 계산하는 로직
     public static void choose(int[][] users, int[] emoticons) {
         if (chosenDiscountRate.size() == emoticons.length) {
             calc(users, emoticons);
@@ -59,19 +57,20 @@ class Solution {
         }
     }
     
-    // 각 이모티콘에 적용될 할인율 선택된 후 유저가 구매할지, 가입할지 계산
+    // 각 임티의 할인율이 선택되었을 때 -> 가입자 수와 판매액 계산
     public static void calc(int[][] users, int[] emoticons) {
         int totalSub = 0;
         int totalSum = 0;
         
+        // 각 유저에 대해서 구매액 및 가입 여부 확인
         for (int i = 0; i < users.length; i++) {
             int minRate = users[i][0];  // 이 할인율 이상인 임티만 구매
             int minSub = users[i][1];   // 이 금액 이상이어야 서비스 구독
             
             int sum = 0;
-            for (int j = 0; j < emoticons.length; j++) {
+            for (int j = 0; j < emoticons.length; j++) {  // 구매액 계산
                 int rate = chosenDiscountRate.get(j);
-                if (rate >= minRate) {
+                if (rate >= minRate) {  // 자신이 생각한 할인율 이상인 경우에만 구매
                     sum += (emoticons[j] - (emoticons[j] * rate / 100));
                 }
             }
