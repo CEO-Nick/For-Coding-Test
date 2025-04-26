@@ -20,10 +20,6 @@ class Solution {
             Plan p = (Plan) obj;
             return this.start - p.start;
         }
-        
-        public String toString() {
-            return "(" + name + ", " + start + ", " + remainingTime + ")";
-        }
     }
     
     public String[] solution(String[][] plans) {
@@ -70,12 +66,15 @@ class Solution {
             // 시간이 남고 멈춰둔 과제가 있다.
             answer[answerIdx++] = onProgress.name;
             int availableTime = timePassed - onProgress.remainingTime;
+            
+            // 남은 시간만큼 멈춰둔 과제 하기(다하면 정답에 기록, 다 못하면 남은 시간 차감)
             while (!blocking.isEmpty()) {
                 Plan p = blocking.peek();
+                
                 if (p.remainingTime > availableTime) {
                     p.decreaseRemainingTime(availableTime);
                     break;
-                } else if (p.remainingTime == availableTime) {
+                } else if (p.remainingTime == availableTime) {  
                     answer[answerIdx++] = blocking.pop().name;
                     break;
                 } else {
@@ -85,10 +84,11 @@ class Solution {
             }
             onProgress = curPlan; 
         }
+        
         // 마지막으로 진행 중이던 과제 끝내기
         answer[answerIdx++] = onProgress.name;
         
-        // 그다음부터는 잠시 멈춘 과제들 모두 꺼내기
+        // 그다음부터는 잠시 멈춘 과제들 모두 꺼내서 기록
         while (!blocking.isEmpty()) {
             answer[answerIdx++] = blocking.pop().name;
         }
