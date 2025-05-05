@@ -43,8 +43,10 @@ class Solution {
             routeList[i] = new ArrayList<Point>();
         }
         
-        // 가장 긴 경로 
+        // 가장 긴 경로 기록
         int maxLen = -1;
+        
+        // 로봇 경로 기록
         for (int i = 0; i < routes.length; i++) {
             recordFullRoute(i, routes[i]);
             maxLen = Math.max(maxLen, routeList[i].size());
@@ -68,7 +70,7 @@ class Solution {
         return answer;
     }
     
-    
+    // 로봇의 path가 주어지면 최단거리 기록
     public static void recordFullRoute(int robotIdx, int[] path) {
         for (int i = 0; i < path.length - 1; i++) {
             int curP = path[i];
@@ -82,19 +84,21 @@ class Solution {
         }
     }
     
-    // route의 인덱스, 시작 포인트, 끝 포인트
+    // 두 point 사이의 최단 거리 기록
     public static void recordRoute(int idx, int sp, int ep) {
         Point startPoint = pointMap.get(sp);
+        Point endPoint = pointMap.get(ep);
+        
         int startX = startPoint.x;
         int startY = startPoint.y;
         
-        Point endPoint = pointMap.get(ep);
         int endX = endPoint.x;
         int endY = endPoint.y;
         
         int curX = startX;
         int curY = startY;
         
+        // r좌표 변하는 이동 먼저
         while (curX != endX) {
             int dx = endX > startX ? 1 : -1;
             curX += dx;
