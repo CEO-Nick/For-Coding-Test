@@ -14,27 +14,25 @@ class Solution {
     public int[] solution(int[] prices) {
         int[] answer = new int[prices.length];
         
-        Stack<Stock> stack = new Stack<>();
-        stack.push(new Stock(0, prices[0]));
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+        
         for(int i = 1; i < prices.length; i++) {
-            if (stack.peek().price <= prices[i]) {
-                stack.push(new Stock(i, prices[i]));
-                continue;
-            }
-            
-            
-            while (!stack.isEmpty() && stack.peek().price > prices[i]) {
-                int peekIdx = stack.peek().idx;
+            while (!stack.isEmpty() && prices[stack.peek()] > prices[i]) {
+                int peekIdx = stack.peek();
                 answer[peekIdx] = i - peekIdx;
                 stack.pop();
             }
-            stack.push(new Stock(i, prices[i]));
+            stack.push(i);
         }
         
-        int n = prices.length;
-        for (int i = 0; i < n; i++) {
-            if (answer[i] == 0) answer[i] = n-i-1;
+        // stack에 남아있는거 기간 계산하기
+        int n = prices.length - 1;
+        while (!stack.isEmpty()) {
+            answer[stack.peek()] = n - stack.peek();
+            stack.pop();
         }
+        
         return answer;
     }
 }
