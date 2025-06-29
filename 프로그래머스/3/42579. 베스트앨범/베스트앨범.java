@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
     static class Music implements Comparable {
@@ -33,30 +34,19 @@ class Solution {
             genrePlayList.put(genres[i], playList);
         }
         
-        // 모든 장르 재생 횟수 다름 -> key로 써도 된다
-        // 재생 횟수 별 장르 (재생 횟수 많은 순으로 정렬하기 위해 tree map 사용)
-        TreeMap<Integer, String> playGenre = new TreeMap<>(Collections.reverseOrder());
-        for (Map.Entry<String, Integer> entry : genrePlay.entrySet()) {
-            playGenre.put(entry.getValue(), entry.getKey());
-        }
-        
-        // 장르별 재생 목록을 재생횟수 많은 순으로 정렬
-        for (Map.Entry<String, ArrayList<Music>> entry : genrePlayList.entrySet()) {
-            Collections.sort(entry.getValue());
-        }
-
         ArrayList<Integer> answer = new ArrayList<>();
-        for (Map.Entry<Integer, String> entry : playGenre.entrySet()) {
-            String genre = entry.getValue();
-            ArrayList<Music> playList = genrePlayList.get(genre);
-            
-            if (playList.size() == 1) answer.add(playList.get(0).idx);
-            else {
-                answer.add(playList.get(0).idx);
-                answer.add(playList.get(1).idx);
-            }
-        }
+        // 총 재생 횟수가 많은 장르 순으로 내림차순 정렬
+        Stream<Map.Entry<String, Integer>> sortedGenre = genrePlay.entrySet().stream()
+            .sorted((o1, o2) -> Integer.compare(o2.getValue(), o1.getValue()));
         
+        // 각 장르 내 노래를 재생 횟수 순으로 정렬해 최대 2곡 선택
+        sortedGenre.forEach(entry -> {
+            Stream<Music> sortedSongs = genrePlayList.get(entry.getKey()).stream()
+                .sorted((m1, m2) -> Integer.compare(m2.plays, m1.plays))
+                .limit(2);
+            
+            sortedSongs.forEach(music -> answer.add(music.idx));
+        });
         
         return answer.stream().mapToInt(Integer::intValue).toArray();
     }
