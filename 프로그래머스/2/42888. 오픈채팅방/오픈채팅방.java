@@ -30,10 +30,6 @@ class Solution {
             }
         }
         
-        String[] arr = new String[answer.size()];
-        for (int i = 0; i < answer.size(); i++) {
-            arr[i] = answer.get(i);
-        }
-        return arr;
+        return answer.toArray(new String[0]);
     }
 }
