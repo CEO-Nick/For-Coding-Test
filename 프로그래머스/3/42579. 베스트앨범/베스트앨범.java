@@ -1,87 +1,63 @@
 import java.util.*;
-import java.util.Map.Entry;
-
 
 class Solution {
-    
-    static class MusicInfo implements Comparable<MusicInfo> {
-        int num;
-        int play;
+    static class Music implements Comparable {
+        int idx;
+        int plays;
         
-        MusicInfo(int num, int play) {
-            this.num = num;
-            this.play = play;
+        Music(int idx, int plays) {
+            this.idx = idx;
+            this.plays = plays;
         }
         
-        // 재생 많은 순 -> 고유 번호 낮은 순
-        @Override
-        public int compareTo(MusicInfo m) {
-            if (this.play == m.play) {
-                return this.num - m.num;
-            } 
-            return m.play - this.play;
+        public int compareTo(Object obj) {
+            Music m = (Music) obj;
+            if (this.plays == m.plays) {
+                return this.idx - m.idx;
+            }
+            return m.plays - this.plays;
         }
     }
     
-    /*
-        재생 많은 장르 순 -> 같은 장르 내에서는 재생 많은 순 -> 같은 장르 & 같은 재생 수에서는 고유 번호 낮은 순
-    */
     public int[] solution(String[] genres, int[] plays) {
-        // 장르별 재생 횟수 저장 ex) key = "pop", value = 3100
-        HashMap<String, Integer> genreToPlay = new HashMap<>();
-        
-        // 장르별 음악 리스트 ex) key = "pop", value = {num: 4 play: 2500}, {num: 1 play: 600}
-        HashMap<String, List<MusicInfo>> genreToList = new HashMap<>();
+        // 장르별 재생 횟수
+        HashMap<String, Integer> genrePlay = new HashMap<>();
+        // 장르별 음악 목록
+        HashMap<String, ArrayList<Music>> genrePlayList = new HashMap<>();
         
         for (int i = 0; i < genres.length; i++) {
-            // 장르별 재생 수 계산
-            if (genreToPlay.containsKey(genres[i])) {
-                genreToPlay.put(genres[i], genreToPlay.get(genres[i]) + plays[i]);
-            } else {
-                genreToPlay.put(genres[i], plays[i]);
-            }
+            genrePlay.put(genres[i], genrePlay.getOrDefault(genres[i], 0) + plays[i]);
             
-            // 장르별 음악 리스트 저장
-            if (genreToList.containsKey(genres[i])) {
-                genreToList.get(genres[i]).add(new MusicInfo(i, plays[i]));
-            } else {
-                List<MusicInfo> list = new ArrayList<>();
-                list.add(new MusicInfo(i, plays[i]));
-                genreToList.put(genres[i], list);
-            }
+            ArrayList<Music> playList = genrePlayList.getOrDefault(genres[i], new ArrayList<>());
+            playList.add(new Music(i, plays[i]));
+            genrePlayList.put(genres[i], playList);
         }
         
-        // 장르별 음악 리스트 정렬 (재생 많은 순 -> 고유 번호 작은 순)
-        for (List<MusicInfo> list : genreToList.values()) {
-            Collections.sort(list);
+        // 모든 장르 재생 횟수 다름 -> key로 써도 된다
+        // 재생 횟수 별 장르 (재생 횟수 많은 순으로 정렬하기 위해 tree map 사용)
+        TreeMap<Integer, String> playGenre = new TreeMap<>(Collections.reverseOrder());
+        for (Map.Entry<String, Integer> entry : genrePlay.entrySet()) {
+            playGenre.put(entry.getValue(), entry.getKey());
         }
         
-        // 재생된 횟수에 따른 장르 ("모든 장르는 재싱된 횟수가 다릅니다." -> 재생 횟수를 key로 해도 된다)
-        // ex) key = 3100, value = "pop"
-        TreeMap<Integer, String> playToGenre = new TreeMap<>();
-        for (Entry<String, Integer> entry : genreToPlay.entrySet()) {
-            playToGenre.put(entry.getValue(), entry.getKey());
+        // 장르별 재생 목록을 재생횟수 많은 순으로 정렬
+        for (Map.Entry<String, ArrayList<Music>> entry : genrePlayList.entrySet()) {
+            Collections.sort(entry.getValue());
         }
-        
-        // 역순으로 순회하면서 각 장르별 음악 최대 2개씩 ans 리스트에 저장
-        ArrayList<Integer> ans = new ArrayList<>();
-        for (Integer key : playToGenre.descendingKeySet()) {
-            String genre = playToGenre.get(key);
+
+        ArrayList<Integer> answer = new ArrayList<>();
+        for (Map.Entry<Integer, String> entry : playGenre.entrySet()) {
+            String genre = entry.getValue();
+            ArrayList<Music> playList = genrePlayList.get(genre);
             
-            List<MusicInfo> genreList = genreToList.get(genre);
-            // 장르 당 최대 2곡
-            int count = genreList.size() >= 2 ? 2 : genreList.size();
-            for (int i = 0; i < count; i++) {
-                ans.add(genreList.get(i).num);
+            if (playList.size() == 1) answer.add(playList.get(0).idx);
+            else {
+                answer.add(playList.get(0).idx);
+                answer.add(playList.get(1).idx);
             }
         }
         
-        // ArrayList -> int[]로 변환
-        int[] answer = new int[ans.size()];
-        for (int i = 0; i < ans.size(); i++) {
-            answer[i] = ans.get(i);
-        }
         
-        return answer;
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }
