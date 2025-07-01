@@ -11,12 +11,6 @@ class Solution {
             this.wolf = wolf;
             this.canVisit = canVisit;
         }
-        
-        @Override
-public String toString() {
-   return String.format("Info{node=%d, sheep=%d, wolf=%d, canVisit=%s}", 
-                       node, sheep, wolf, canVisit);
-}
     }
     
     
