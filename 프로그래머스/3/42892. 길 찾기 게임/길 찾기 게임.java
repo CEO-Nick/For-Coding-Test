@@ -1,73 +1,95 @@
 import java.util.*;
+
 class Solution {
-    static class Node{
-        int x; int y; int v;
-        Node left; Node right;
-        public Node (int x, int y, int v){
+    static class Node implements Comparable {
+        int idx;
+        int x, y;
+        Node left, right;
+        
+        public Node(int idx, int x, int y, Node left, Node right) {
+            this.idx = idx;
             this.x = x;
             this.y = y;
-            this.v = v;
+            this.left = left;
+            this.right = right;
+        }
+        
+        public int compareTo(Object obj) {
+            Node n = (Node) obj;
+            if (this.y == n.y) {
+                return this.x - n.x;
+            }
+            return n.y - this.y;
+        }
+        
+        @Override
+        public String toString() {
+           return String.format("Node{idx=%d, x=%d, y=%d, left=%s, right=%s}", 
+                               idx, x, y, 
+                               left != null ? "Node(" + left.idx + ")" : "null",
+                               right != null ? "Node(" + right.idx + ")" : "null");
         }
     }
-    static ArrayList<Node> nodes = new ArrayList<>();
-    static int cnt = 0;
-    static int [][] answer; 
-    public int[][] solution(int[][] nodeinfo) {
-        
-        int size = nodeinfo.length;
-        
-        for(int i = 0; i < size; i++){
-            nodes.add(new Node(nodeinfo[i][0], nodeinfo[i][1], i + 1));
+    
+    static ArrayList<Integer> preOrderList;
+    static ArrayList<Integer> postOrderList;
+    
+    public int[][] solution(int[][] nodeinfo) {        
+        ArrayList<Node> nodeList = new ArrayList<>();
+        for (int i = 0; i < nodeinfo.length; i++) {
+            nodeList.add(new Node(i+1, nodeinfo[i][0], nodeinfo[i][1], null, null));
         }
         
-        // y 크기 내림차순 정렬 -> 레벨(depth) 오름차순 정렬  
-        Collections.sort(nodes, (o1, o2) -> {
-            return o2.y - o1.y;
-        });
+        Collections.sort(nodeList);
         
-        Node root = nodes.get(0); // 루트 노드 꺼내기 
-        for(int i = 1; i < size; i++){
-            update(root, nodes.get(i));
+        // 이진 트리 만들기
+        Node root = nodeList.get(0);
+        for (int i = 1; i < nodeList.size(); i++) {
+            Node parent = root;
+            Node curNode = nodeList.get(i);
+            
+            while (true) {
+                if (parent.x > curNode.x) {
+                    if (parent.left == null) {
+                        parent.left = curNode;
+                        break;
+                    }
+                    else parent = parent.left;
+                } else {
+                    if (parent.right == null) {
+                        parent.right = curNode;
+                        break;
+                    }
+                    else parent = parent.right;
+                }
+            }
         }
         
-        answer = new int [2][size];
+        preOrderList = new ArrayList<>();
+        postOrderList = new ArrayList<>();
+        preorder(root);
+        postorder(root);
         
-        pre(root);  // 전위 순회 시작 
-        
-        cnt = 0;    // cnt 초기화 
-        post(root); // 후위 순회 시작 
+        int[][] answer = new int[2][nodeinfo.length];
+        answer[0] = preOrderList.stream().mapToInt(Integer::intValue).toArray();
+        answer[1] = postOrderList.stream().mapToInt(Integer::intValue).toArray();
         
         return answer;
     }
     
-    public static void post(Node cur){ // 후위 순회
-        if(cur.left != null){
-            post(cur.left);
-        }
-        if(cur.right != null){
-            post(cur.right);
-        }
-        answer[1][cnt++] = cur.v;
+    public static void preorder(Node cur) {
+        if (cur == null) return;
+        
+        preOrderList.add(cur.idx);
+        preorder(cur.left);
+        preorder(cur.right);
     }
     
-    public static void pre(Node cur){ // 전위 순회
-        answer[0][cnt++] = cur.v;
-        if(cur.left != null){
-            pre(cur.left);
-        }
-        if(cur.right != null){
-            pre(cur.right);
-        }
-    }
-    
-    public static void update(Node parent, Node child){ // 노드 연결
-        if(parent.x > child.x){ // 왼쪽
-            if(parent.left == null) parent.left = child;
-            else update(parent.left, child);
-        }
-        else{
-            if(parent.right == null) parent.right = child;
-            else update(parent.right, child);
-        }
+    public static void postorder(Node cur) {
+        if (cur == null) return;
+        
+        postorder(cur.left);
+        postorder(cur.right);
+        postOrderList.add(cur.idx);
     }
 }
