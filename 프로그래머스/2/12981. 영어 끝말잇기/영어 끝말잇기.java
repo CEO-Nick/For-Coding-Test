@@ -8,27 +8,24 @@ class Solution {
         
         String beforeWord = words[0];
         spokenWords.add(words[0]);
-        int[] count = new int[n];
-        count[0]++;
         
         for (int i = 1; i < words.length; i++) {
             String word = words[i];
-            int idx = i % n;
             
             if (beforeWord.charAt(beforeWord.length()-1) != word.charAt(0)) {
-                answer[0] = idx + 1;
-                answer[1] = count[idx] + 1;
+                answer[0] = (i % n) + 1;
+                answer[1] = (i / n) + 1;
                 return answer;
             }
             
             if (spokenWords.contains(word)) {
-                answer[0] = idx + 1;
-                answer[1] = count[idx] + 1;
+                answer[0] = (i % n) + 1;
+                answer[1] = (i / n) + 1;
                 return answer;
             }
+            
             spokenWords.add(word);
             beforeWord = word;
-            count[idx]++;
         }
 
         return answer;
