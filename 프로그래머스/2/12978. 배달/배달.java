@@ -30,10 +30,10 @@ class Solution {
         
         int[] minCost = new int[N+1];
         Arrays.fill(minCost, Integer.MAX_VALUE);
+        minCost[1] = 0;
         
         PriorityQueue<Node> pq = new PriorityQueue<>((n1, n2) -> Integer.compare(n1.cost, n2.cost));
         pq.add(new Node(1, 0));
-        minCost[1] = 0;
         
         boolean[] visited = new boolean[N+1];
         
@@ -44,10 +44,8 @@ class Solution {
             visited[cur.num] = true;
             
             for (Node next : adjList[cur.num]) {
-                
-                
-                if (minCost[next.num] > minCost[cur.num] + next.cost) {
-                    minCost[next.num] = minCost[cur.num] + next.cost;
+                if (minCost[next.num] > cur.cost + next.cost) {
+                    minCost[next.num] = cur.cost + next.cost;
                     pq.add(new Node(next.num, minCost[next.num]));
                 }
             }
