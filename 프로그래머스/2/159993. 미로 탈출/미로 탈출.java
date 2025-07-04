@@ -1,97 +1,90 @@
 import java.util.*;
 
 class Solution {
+    
     static class Point {
-        int x;
-        int y;
+        int x, y;
         int time;
         
-        Point(int x, int y, int time) {
+        Point (int x, int y, int time) {
             this.x = x;
             this.y = y;
             this.time = time;
         }
     }
     
-    static int[] dxs = new int[] {1, 0, -1, 0};
-    static int[] dys = new int[] {0, 1, 0, -1};
-    static Point start;
-    static Point lever;
-    static Point end;
-    static char[][] grid;
-    static boolean[][] visited;
+    static char START = 'S';
+    static char EXIT = 'E';
+    static char LEVER = 'L';
+    static char ROAD = 'O';
+    static char WALL = 'X';
+    
     static int N;
     static int M;
-    static int ans = 0;
+    static char[][] grid;
     
     public int solution(String[] maps) {
+        int answer = 0;
         N = maps.length;
         M = maps[0].length();
+        Point start = null;
+        Point lever = null;
+        Point exit = null;
         grid = new char[N][M];
-        
-        // maps -> 2차원 배열 grid로 옮기기
-        // 옮기면서 시작, 레버, 끝 지점 저장해두기
         for (int i = 0; i < N; i++) {
-            char[] map = maps[i].toCharArray();
             for (int j = 0; j < M; j++) {
-                if (map[j] == 'S') start = new Point(i, j, 0);
-                else if (map[j] == 'L') lever = new Point(i, j, 0);
-                else if (map[j] == 'E') end = new Point(i, j, 0);
-                grid[i][j] = map[j];
+                char type = maps[i].charAt(j);
+                grid[i][j] = type;
+                if (type == START) start = new Point(i, j, 0);
+                else if (type == EXIT) exit = new Point(i, j, 0);
+                else if (type == LEVER) lever = new Point(i, j, 0);
             }
         }
         
-        // 시작 ~ 레버까지 최단시간 ans에 저장
-        bfs(start, lever);
+        int toLever = BFS(start, lever);
+        if (toLever == 0) return -1;
+        else answer += toLever;
         
-        // 레버까지 갈 수 없으면 탈출 불가
-        if (ans == 0) return -1;
-            
-        int before = ans;
-        // 레버 ~ 출구까지 최단시간 조사
-        bfs(lever, end);
+        int toExit = BFS(lever, exit);
+        if (toExit == 0) return -1;
+        else answer += toExit;
         
-        // 바뀐게 없으면 출구 도달 불가능
-        if (before == ans) return -1;
-        
-        return ans;
+        return answer;
     }
     
+    static int[] dxs = new int[] {1, 0, -1, 0};
+    static int[] dys = new int[] {0, 1, 0, -1};
+    static boolean[][] visited;
     
-    // bfs로 최단거리 구하기
-    public static void bfs(Point s, Point e) {
-        Queue<Point> q = new ArrayDeque<>();
-        q.add(s);
+    static int BFS(Point first, Point target) {
         visited = new boolean[N][M];
-        visited[s.x][s.y] = true;
-        while(!q.isEmpty()) {
+        ArrayDeque<Point> q = new ArrayDeque<>();
+        q.add(first);
+        visited[first.x][first.y] = true;
+        
+        while (!q.isEmpty()) {
             Point cur = q.poll();
             
-            if (cur.x == e.x && cur.y == e.y) {
-                ans += cur.time;
-                return;
+            if (cur.x == target.x && cur.y == target.y) {
+                return cur.time;
             }
+            
             for (int i = 0; i < 4; i++) {
                 int nx = cur.x + dxs[i];
                 int ny = cur.y + dys[i];
-                if (canGo(nx, ny)) {
-                    visited[nx][ny] = true;
-                    q.add(new Point(nx, ny, cur.time + 1));
-                }
+                
+                if (!inRange(nx, ny)) continue;
+                if (grid[nx][ny] == WALL) continue;
+                if (visited[nx][ny]) continue;
+                
+                q.add(new Point(nx, ny, cur.time + 1));
+                visited[nx][ny] = true;
             }
         }
+        return 0;
     }
     
-    // (nx, ny)로 갈 수 있는지 검증
-    public static boolean canGo(int nx, int ny) {
-        if (!inRange(nx, ny)) return false;
-        if (visited[nx][ny] || grid[nx][ny] == 'X') return false;
-        
-        return true;
-    }
-    
-    // (nx, ny)가 N x M 범위 안에 있는지 검증
-    public static boolean inRange(int nx, int ny) {
+    static boolean inRange(int nx, int ny) {
         return 0 <= nx && nx < N && 0 <= ny && ny < M;
     }
 }
