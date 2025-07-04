@@ -24,17 +24,16 @@ class Solution {
     static char[][] grid;
     
     public int solution(String[] maps) {
-        int answer = 0;
         N = maps.length;
         M = maps[0].length();
-        Point start = null;
-        Point lever = null;
-        Point exit = null;
+        Point start = null, lever = null, exit = null;
         grid = new char[N][M];
+
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 char type = maps[i].charAt(j);
                 grid[i][j] = type;
+                
                 if (type == START) start = new Point(i, j, 0);
                 else if (type == EXIT) exit = new Point(i, j, 0);
                 else if (type == LEVER) lever = new Point(i, j, 0);
@@ -43,13 +42,11 @@ class Solution {
         
         int toLever = BFS(start, lever);
         if (toLever == 0) return -1;
-        else answer += toLever;
         
         int toExit = BFS(lever, exit);
         if (toExit == 0) return -1;
-        else answer += toExit;
-        
-        return answer;
+
+        return toLever + toExit;
     }
     
     static int[] dxs = new int[] {1, 0, -1, 0};
