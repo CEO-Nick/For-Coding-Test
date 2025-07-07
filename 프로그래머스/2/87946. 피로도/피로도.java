@@ -1,56 +1,31 @@
-import java.util.*;
-
 class Solution {
-    static boolean[] visited;
-    static int maxCount;
     
-    class Dungeon {
-        int mini;
-        int use;
-        
-        Dungeon(int m, int u) {
-            this.mini = m;
-            this.use = u;
+    static int answer;
+    static int[][] Dungeons;
+    static boolean[] visited;
+    
+    private static void backtrack(int k, int cnt) {
+        for (int i = 0; i < Dungeons.length; i++) {
+            // i던전 방문한 적 없고, 현재 피로도로 갈 수 있는 경우
+            if (!visited[i] && k >= Dungeons[i][0]) {
+                visited[i] = true;
+                
+                backtrack(k - Dungeons[i][1], cnt + 1);
+                answer = Math.max(answer, cnt + 1);
+                
+                visited[i] = false;
+            }
         }
     }
     
-    static Dungeon[] arr;
-    
     public int solution(int k, int[][] dungeons) {
-        int answer = -1;
-        arr = new Dungeon[dungeons.length];
-        for (int i = 0; i < dungeons.length; i++) {
-            arr[i] = new Dungeon(dungeons[i][0], dungeons[i][1]);
-        }
         
-        for (int i = 0; i < dungeons.length; i++) {
-            if (dungeons[i][0] <= k) {
-                maxCount = Integer.MIN_VALUE;
-                visited = new boolean[dungeons.length];
-                dfs(i, 1, k);
-                answer = Math.max(answer, maxCount);
-                
-            }
-        }
+        Dungeons = dungeons;
+        visited = new boolean[dungeons.length];
+        
+        backtrack(k, 0);
         return answer;
     }
     
-    public int dfs(int start, int count, int fatigue) {
-        
-        visited[start] = true;
-        fatigue -= arr[start].use;
-        
-        for (int i = 0; i < arr.length; i++) {
-            if (!visited[i]) {
-                if (fatigue >= arr[i].mini) {
-                    // System.out.println("i" + i);
-                    int c = dfs(i, count + 1, fatigue);
-                    maxCount = Math.max(maxCount, c);
-                }
-            }
-        }
-        visited[start] = false;
-        return count;
-    }
     
 }
