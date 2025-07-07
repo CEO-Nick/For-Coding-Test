@@ -1,80 +1,75 @@
 import java.util.*;
 
 class Solution {
-
-    static int N;
-    static boolean[][] visited;
-    static int[][] costs;
-    static int[][] grid;
     
-    static int[] dxs = new int[] {1, 0, -1, 0};
-    static int[] dys = new int[] {0, 1, 0, -1};
-
+    static class Point {
+        int x, y;
+        int dir;
+        int cost;
+        
+        Point(int x, int y, int b, int c) {
+            this.x = x;
+            this.y = y;
+            this.dir = b;
+            this.cost = c;
+        }
+    }
+    
+    
+    static int N;
+    static int INF = Integer.MAX_VALUE;
     
     public int solution(int[][] board) {
         N = board.length;
-        grid = board;
-        visited = new boolean[N][N];
-
-        costs = new int[N][N];
-                
-        return Math.min(BFS(0, 0, 0, 0), BFS(0, 0, 0, 1));
+        cost = new int[N][N];
+    
+        return Math.min(BFS(board, 0), BFS(board, 1));
     }
     
-    static class Point {
-        int x;
-        int y;
-        int cost;
-        int dir;
+    static int[][] cost;
+    static int[] dx = new int[] {1, 0, -1, 0};
+    static int[] dy = new int[] {0, 1, 0, -1};
+    static int answer = Integer.MAX_VALUE;
+    
+    static int BFS(int[][] board, int startDir) {
+        ArrayDeque<Point> q = new ArrayDeque<>();    
         
-        Point(int x, int y, int cost, int dir) {
-            this.x = x;
-            this.y = y;
-            this.cost = cost;
-            this.dir = dir;
+        for (int i = 0; i < N; i++) {
+            Arrays.fill(cost[i], INF);
         }
-    }
-    
-    static boolean canGo(int nx, int ny) {
-        // n x n 범위 밖인 경우
-        if (nx < 0 || nx >= N || ny < 0 || ny >= N) return false;
         
-        // 벽인 경우
-        if (grid[nx][ny] == 1) return false;
+        q.add(new Point(0, 0, startDir, 0));
+        cost[0][0] = 0;
         
-        return true;
-    }
-    
-    static int BFS(int x, int y, int cost, int dir) {
-        ArrayDeque<Point> q = new ArrayDeque<>();
-        q.add(new Point(x, y, cost, dir));
-        
-        initCosts();
-                
         while (!q.isEmpty()) {
             Point cur = q.poll();
-                      
+            
             for (int i = 0; i < 4; i++) {
-                int nx = cur.x + dxs[i], ny = cur.y + dys[i];
-                if (!canGo(nx, ny)) continue;
+                int nx = cur.x + dx[i];
+                int ny = cur.y + dy[i];
                 
-                int nCost = cur.dir == i ? cur.cost + 100 : cur.cost + 600;
+                if (!inRange(nx, ny)) continue;
+                if (board[nx][ny] == 1) continue;
                 
-                if (nCost < costs[nx][ny]) {
-                    costs[nx][ny] = nCost;
-                    q.add(new Point(nx, ny, nCost, i));
+                int nextCost = cur.dir == i ? cur.cost + 100 : cur.cost + 600;
+                if (nextCost < cost[nx][ny]) {
+                    cost[nx][ny] = nextCost;
+                    q.add(new Point(nx, ny, i, nextCost));
                 }
-                
             }
         }
-        return costs[N-1][N-1];
+        
+        return cost[N-1][N-1];
     }
     
-    static void initCosts() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                costs[i][j] = Integer.MAX_VALUE;
-            }
-        }
+    static boolean inRange(int nx, int ny) {
+        return 0 <= nx && nx < N && 0 <= ny && ny < N;
+    }
+    
+    static boolean isCorner(int before, int current) {
+        if (before % 2 == 0 && current % 2 == 1) return true;
+        else if (before % 2 == 1 && current % 2 == 0) return true;
+        
+        return false;
     }
 }
