@@ -2,50 +2,53 @@ import java.util.*;
 
 class Solution {
     
-    static boolean[] visited;
-    static int[][] tree;
-    static int count;
     
     public int solution(int n, int[][] wires) {
-        n = n;
         int answer = Integer.MAX_VALUE;
         
-        // for문을 돌면서 끊을 전선 정보 선택
-        // 해당 전선 끊겼다고 가정하고 각각 dfs해서 개수 차이 구하기
-        // 굳이 직접 끊을 필요 없이 dfs 돌기전에 두 노드 visited = true 처리하면 될 듯
+        adjList = new ArrayList[n+1];
+        for (int i = 1; i <= n; i++) {
+            adjList[i] = new ArrayList<>();
+        }
         
-        tree = new int[n+1][n+1];
-        for (int i = 0; i < wires.length; i++) {
-            int a = wires[i][0];
-            int b = wires[i][1];
-            tree[a][b] = 1;
-            tree[b][a] = 1;
+        for (int[] wire : wires) {
+            adjList[wire[0]].add(wire[1]);
+            adjList[wire[1]].add(wire[0]);
         }
         
         for (int[] wire : wires) {
             visited = new boolean[n+1];
-            visited[wire[0]] = true;
-            visited[wire[1]] = true;
             
-            count = 0;
-            dfs(wire[0], n);
-            int net1 = count;
+            // 해당 전선 삭제
+            adjList[wire[0]].remove(new Integer(wire[1]));
+            adjList[wire[1]].remove(new Integer(wire[0]));   
             
+            // 한 쪽 전력망 크기 구하기
             count = 0;
-            dfs(wire[1], n);
-            int net2 = count;
-            answer = Math.min(answer, Math.abs(net1 - net2));
+            dfs(1);
+            answer = Math.min(answer, Math.abs((n - count) - count));
+            
+            // 전선 복구
+            adjList[wire[0]].add(wire[1]);
+            adjList[wire[1]].add(wire[0]);
         }
+        
+        
         return answer;
     }
-                    
-    static void dfs(int node, int n) {
+    
+    
+    static ArrayList<Integer>[] adjList;
+    static boolean[] visited;
+    static int count;
+    
+    static void dfs(int node) {
         visited[node] = true;
         count++;
-        for (int i = 1; i <= n; i++) {
-            if (!visited[i] && tree[node][i] != 0) {
-                dfs(i, n);
-            }
+        
+        for (int next : adjList[node]) {
+            if (visited[next]) continue;
+            dfs(next);
         }
     }
 }
