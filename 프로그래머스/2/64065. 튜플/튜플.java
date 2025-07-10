@@ -2,10 +2,9 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String s) {
-        s = s.substring(1, s.length()-1);
+        s = s.substring(1, s.length()-2);
         s = s.replace("{", "");
-        s = s.replace("}", "/"); 
-        String[] arr = s.split("/,");
+        String[] arr = s.split("},");
         
         ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         
@@ -13,9 +12,6 @@ class Solution {
             String[] tmp = arr[i].split(",");
             ArrayList<Integer> l = new ArrayList<>();
             for (String t : tmp) {
-                if (t.endsWith("/")) {
-                    t = t.substring(0, t.length()-1);
-                }
                 l.add(Integer.parseInt(t));
             };
             list.add(l);
