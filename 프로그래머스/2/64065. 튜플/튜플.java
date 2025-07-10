@@ -2,38 +2,38 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String s) {
-        int[] answer;
-        
+        s = s.substring(1, s.length()-1);
         s = s.replace("{", "");
-
-        String[] array = s.split("}");
-        List<List<Integer>> doubleList = new ArrayList<>();
-        for (int i = 0; i < array.length; i++) {
-            String[] split = array[i].split(",");
-            List<Integer> list = new ArrayList<>();
-            for (int j = 0; j < split.length; j++) {
-                if (split[j].equals("")) continue;
-                list.add(Integer.parseInt(split[j]));
-            }
-            doubleList.add(list);
+        s = s.replace("}", "/"); 
+        String[] arr = s.split("/,");
+        
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        
+        for (int i = 0; i < arr.length; i++) {
+            String[] tmp = arr[i].split(",");
+            ArrayList<Integer> l = new ArrayList<>();
+            for (String t : tmp) {
+                if (t.endsWith("/")) {
+                    t = t.substring(0, t.length()-1);
+                }
+                l.add(Integer.parseInt(t));
+            };
+            list.add(l);
         }
         
-        doubleList.sort((o1, o2) -> o1.size() - o2.size());
-        // doubleList.sort(Comparator.comparingInt(List::size));
-        answer = new int[doubleList.size()];
-        boolean[] visited = new boolean[100001];
-        for (int i = 0; i < doubleList.size(); i++) {
-            if (i == 0) {
-                answer[i] = doubleList.get(i).get(i);
-                visited[answer[i]] = true;
-                continue;
-            }
-            for (int e : doubleList.get(i)) {
-                if (visited[e]) continue;
-                answer[i] = e;
-                visited[e] = true;
+        list.sort((l1, l2) -> l1.size() - l2.size());
+        
+        ArrayList<Integer> answer = new ArrayList<>();
+        HashSet<Integer> set = new HashSet<>();
+        for (ArrayList<Integer> l : list) {
+            for (int num : l) {
+                if (set.contains(num)) continue;
+                
+                set.add(num);
+                answer.add(num);
+                break;
             }
         }
-        return answer;
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 }
