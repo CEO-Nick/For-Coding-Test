@@ -1,34 +1,33 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 class Solution {
+    // return: 공평하게 자르는 방법 수 (없으면 0)
     public int solution(int[] topping) {
         int answer = 0;
+        HashMap<Integer, Integer> cheolsu = new HashMap<>();
+        HashMap<Integer, Integer> brother = new HashMap<>();
         
-        // 각 토핑이 몇 개씩 있는지 조사
-        // 동생 먹을거 고르면 조사한거에서 빼면 그게 형이 먹을 개수임
+        cheolsu.put(topping[0], 1);
         
-        HashMap<Integer, Integer> toppingMap = new HashMap<>();
-        for (int t : topping) {
-            toppingMap.put(t, toppingMap.getOrDefault(t, 0) + 1);
+        for (int i = 1; i < topping.length; i++) {
+            int count = brother.getOrDefault(topping[i], 0);
+            brother.put(topping[i], count+1);
         }
         
-        HashSet<Integer> toppingSet = new HashSet<>();
+        answer += cheolsu.size() == brother.size() ? 1 : 0;
         
-        for (int t : topping) {
-            // 동생이 먹을 토핑 추가
-            toppingSet.add(t);
+        for (int i = 1; i < topping.length; i++) {
             
-            // 그 토핑의 개수 빼기
-            toppingMap.put(t, toppingMap.get(t) - 1);
+            int count1 = cheolsu.getOrDefault(topping[i], 0);
+            cheolsu.put(topping[i], count1 + 1);
             
-            // 토핑 다 먹었으면 제거하기
-            if (toppingMap.get(t) == 0) toppingMap.remove(t);
+            int count2 = brother.get(topping[i]);
+            if (count2 == 1) brother.remove(topping[i]);
+            else brother.put(topping[i], count2-1);
             
-            // 동생이 먹을 토핑 종류와 남은 토핑 종류(=형이 먹을 토핑 종류)가 같다면
-            if (toppingSet.size() == toppingMap.size()) answer ++;
-            
+            answer += cheolsu.size() == brother.size() ? 1 : 0;
         }
+        
         return answer;
     }
 }
