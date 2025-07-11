@@ -1,16 +1,19 @@
 class Solution {
     public int[] solution(String s) {
-        int[] answer = {0, 0};
-        // 문자열에서 1인 부분의 개수 구하고 2진수로 변환 -> 변환된 2진수의 길이가 1이 아니면 반복
-        while (s.length() != 1) {
-            int count = 0;
-            for (int i = 0; i < s.length(); i++) {
-                char c = s.charAt(i);
-                if (c == '1') count++;
-                else answer[1]++;
-            }
+        int[] answer = new int[2];
+        
+        while (!s.equals("1")) {
+            int before = s.length();
+            s = s.replace("0", "");
+            int after = s.length();
             
-            s = Integer.toBinaryString(count);
+            // 삭제된 0의 개수 
+            answer[1] += (before - after);
+                    
+            // 이진 변환 결과
+            s = Integer.toBinaryString(s.length());
+            
+            // 이진 변환 횟수
             answer[0]++;
         }
         return answer;
