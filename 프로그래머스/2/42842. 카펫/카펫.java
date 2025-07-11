@@ -1,23 +1,19 @@
-import java.util.*;
-
 class Solution {
     public int[] solution(int brown, int yellow) {
-        int[] ans = new int[2];
+        int[] answer = new int[2];
         int total = brown + yellow;
         
-        for (int i = 1; i < (int) (Math.sqrt(yellow)) + 1; i++) {
-            if (yellow % i == 0) {
-                int j = yellow / i;
-                int calc = (i+2) * (j+2);
-                if (calc == total) {
-                    ans[1] = i + 2;
-                    ans[0] = j + 2;
-                    break;
-                }
-            }
+        for (int h = 3; h < (int)(Math.sqrt(total)) + 1; h++) {
+            if (total % h != 0) continue;
             
+            int w = total / h;
+            int b = w * 2 + (h - 2) * 2;
+            if (b == brown) {
+                answer[0] = w;
+                answer[1] = h;
+                break;
+            }
         }
-        
-        return ans;
+        return answer;
     }
 }
