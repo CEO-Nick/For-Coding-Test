@@ -1,25 +1,25 @@
 import java.util.*;
 
 class Solution {
-       
     int solution(int[][] land) {
+        int answer = 0;
         int n = land.length;
-        // dp[i][j] = dp[i-1][0] ~ dp[i-1][3] 중에서 최댓값 + land[i][j]의 값
         int[][] dp = new int[n][4];
         
-        for (int j = 0; j < 4; j++) dp[0][j] = land[0][j];
+        dp[n-1] = land[n-1].clone();
         
-        for (int i = 1; i < n; i++) {
-            land[i][0] += Math.max(Math.max(land[i-1][1], land[i-1][2]), land[i-1][3]);
-            land[i][1] += Math.max(Math.max(land[i-1][0], land[i-1][2]), land[i-1][3]);
-            land[i][2] += Math.max(Math.max(land[i-1][1], land[i-1][0]), land[i-1][3]);
-            land[i][3] += Math.max(Math.max(land[i-1][1], land[i-1][2]), land[i-1][0]);
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = 0; j < 4; j++) {
+                int max = 0;
+                for (int k = 0; k < 4; k++) {
+                    if (j == k) continue;
+                    max = Math.max(dp[i+1][k], max);
+                }
+                dp[i][j] = land[i][j] + max;
+            }
+            
         }
         
-        int answer = -1;
-        for (int j = 0; j < 4; j++) answer = Math.max(answer, land[n-1][j]);
-        
-        return answer;
+        return Arrays.stream(dp[0]).max().getAsInt();
     }
-
 }
