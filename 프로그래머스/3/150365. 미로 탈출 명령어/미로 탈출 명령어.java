@@ -34,7 +34,7 @@ class Solution {
             } else if (y - 1 >= 1 && Math.abs(x-r) + Math.abs(y-1-c) <= k) {
                 y--;
                 sb.append("l");
-            } else if (y+1 <= n && Math.abs(x-r) + Math.abs(y+1-c) <= k) {
+            } else if (y+1 <= m && Math.abs(x-r) + Math.abs(y+1-c) <= k) {
                 y++;
                 sb.append("r");
             } else {
