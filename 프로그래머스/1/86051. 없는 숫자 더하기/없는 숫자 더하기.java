@@ -1,9 +1,12 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[] numbers) {
-        int total = 0;
-        for (int num : numbers) {
-            total += num;
+        int sum = 0;
+        for (int i = 0; i < numbers.length; i++) {
+            sum += numbers[i];
         }
-        return 45 - total;
+        
+        return 45 - sum;
     }
 }
