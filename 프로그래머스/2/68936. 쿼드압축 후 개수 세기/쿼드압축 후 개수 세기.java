@@ -1,44 +1,39 @@
 class Solution {
-    static int zero = 0;
-    static int one = 0;
+    static int[][] grid;
+    static int[] answer;
     
-    // {0 개수, 1 개수}
-    static void check(int[][] arr, int startX, int startY, int endX, int endY, int len) {
-        // 1개 숫자로 압축할 수 있는 경우
-        if (canCompress(arr, startX, startY, endX, endY)) {
-            zero += arr[startX][startY] == 0 ? 1 : 0;
-            one += arr[startX][startY] == 1 ? 1 : 0;
-            return;
-        }
-        
-        // 더이상 분할 불가능
-        if (len == 1) return;
-        
-        // 압축 못하면 4개로 분할하기
-        check(arr, startX, startY, startX + len/2 - 1, startY + len/2 - 1, len / 2); // 좌측 상단
-        check(arr, startX, startY + len/2, startX + len/2 - 1, endY, len / 2); // 우측 상단
-        check(arr, startX + len/2, startY, endX, startY + len/2 - 1, len / 2); // 좌측 하단
-        check(arr, startX + len/2, startY + len/2, endX, endY, len / 2); // 우측 하단
-    }
-    
-    // 지정된 범위 안에서 압축 가능한지 판단
-    static boolean canCompress(int[][] arr, int startX, int startY, int endX, int endY) {
-        int std = arr[startX][startY];
-        for (int i = startX; i <= endX; i++) {
-            for (int j = startY; j <= endY; j++) {
-                if (std != arr[i][j]) return false;
-            }
-        }
-        return true;
-    }
     public int[] solution(int[][] arr) {
-        // S 내부 모든 수 같은 값 -> S를 하나로 압축
-        // S를 4개로 쪼갬
-        // 재귀함수로 쪼개야겠다
-        // 재귀함수에서는 자기 부분 압축 가능한지 check -> 가능하면 바로 해당 값 반환
-        // 불가능하면 4개 쪼개서 각각함수 호출
-        check(arr, 0, 0, arr.length - 1, arr.length - 1, arr.length);
+        answer = new int[2];
+        grid = arr;
+        int length = arr.length;
+        int res = divide(0, 0, length);
+        if (res == 0 || res == 1) answer[res]++;
         
-        return new int[] {zero, one};
+        return answer;
+    }
+    
+    // 1: 1로 압축 가능, 0: 0으로 압축 가능, -1: 압축 불가능
+    static int divide(int x, int y, int len) {
+        if (len == 1) return grid[x][y];
+        
+        int lu = divide(x, y, len/2);
+        int ru = divide(x, y+len/2, len/2);
+        int ld = divide(x+len/2, y, len/2);
+        int rd = divide(x+len/2, y+len/2, len/2);
+        
+        // 4개로 쪼갠 결과가 모두 1이거나 모두 0이면 압축 가능하다
+        if (lu == 1 && ru == 1 && ld == 1 && rd == 1) {
+            return 1;
+        }
+        if (lu == 0 && ru == 0 && ld == 0 && rd == 0) {
+            return 0;
+        }
+        
+        // 압축 불가능한 경우, 그 상위도 이제 압축 불가능
+        if (lu == 0 || lu == 1) answer[lu]++;
+        if (ru == 0 || ru == 1) answer[ru]++;
+        if (ld == 0 || ld == 1) answer[ld]++;
+        if (rd == 0 || rd == 1) answer[rd]++;
+        return -1;
     }
 }
