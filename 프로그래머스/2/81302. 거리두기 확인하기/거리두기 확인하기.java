@@ -1,70 +1,67 @@
-class Solution {
-    public int[] solution(String[][] places) {
-        // 맨해튼 거리 2이하 X (BUT 파티션 막혀 있으면 O)
-        // P = 사람
-        // O = 빈 테이블
-        // X = 파티션
-        // 대기실은 5개, 각 대기실 5 x 5
-        // 각 대기실에서 모두 다 지켜야 1, 한명이라도 안지키면 그 대기실은 0
-        int answer[] = new int[5];
-        for (int k = 0; k < places.length; k++) {
-            answer[k] = check(places[k]) ? 1 : 0;
+import java.util.*;
 
+class Solution {
+    // 맨해튼 거리 2 이하로 앉지 말기
+    // 파티션 있으면 ㄱㅊ
+    // 모두 거리두기 O -> 1
+    // 한명이라도 X -> 0
+    
+    static int[] answer;
+    public int[] solution(String[][] places) {
+        answer = new int[5];
+        Arrays.fill(answer, 1);
+        for (String[] place : places) {
+            check(place);
         }
         return answer;
     }
     
-    static boolean[][] visited;
+    static int[] dx = new int[] {1, 0, -1, 0};
+    static int[] dy = new int[] {0, 1, 0, -1};
+    static int idx = 0;
     
-    // 대기실 별 거리두기 확인
-    static boolean check(String[] room) {
+    public static void check(String[] place) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                if (room[i].charAt(j) == 'P') {
-                    visited = new boolean[5][5];
-                    visited[i][j] = true;
-                    boolean res = possible(room, i, j);
-                    // 한 사람이라도 거리두기 어기면 해당 대기실은 0
-                    if (!res) return false;
-                }
-            }
-        }
-        return true;
-    }
-    
-    static int[] dxs = new int[] {1, 0 , -1, 0};
-    static int[] dys = new int[] {0, 1, 0, -1};
-    
-    // (x, y) 기준으로 맨해튼 거리 2이하 조사
-    static boolean possible(String[] room, int x, int y) {
-        for (int i = 0; i < 4; i++) {
-            // 맨해튼 거리 1 조사
-            int nx = x + dxs[i], ny = y + dys[i];
-            if (inRange(nx, ny) && !visited[nx][ny]) {
-                visited[nx][ny] = true;
-                char next = room[nx].charAt(ny);
+                if (place[i].charAt(j) != 'P') continue;
                 
-                if (next == 'X') continue;
-                else if (next == 'P') return false;
-                else {
-                    // 맨해튼 거리 2 조사
-                    for (int j = 0; j < 4; j++) {
-                        int nnx = nx + dxs[j], nny = ny + dys[j];
-                        if (inRange(nnx, nny) && !visited[nnx][nny]) {
-                            visited[nnx][nny] = true;
-                            char nnext = room[nnx].charAt(nny);
-                            if (nnext == 'P') return false;
+                // 첫 칸 이동해보기
+                for (int k = 0; k < 4; k++) {
+                    int nx = i + dx[k];
+                    int ny = j + dy[k];
+
+                    if (nx < 0 || nx >= 5 || ny < 0 || ny >= 5) continue;
+                    
+                    // 사람 있으면 끝
+                    if (place[nx].charAt(ny) == 'P') {
+                        answer[idx++] = 0;
+                        System.out.println("(" + i+", "+j + ")" + "  " + "(" + nx+", "+ny + ")");
+                        return;
+                    }
+                    // 파티션 있으면 pass
+                    if (place[nx].charAt(ny) == 'X') continue;
+
+                    // 빈 책상이면 한번더 가보기
+                    for (int l = 0; l < 4; l++) {
+                        int nnx = nx + dx[l];
+                        int nny = ny + dy[l];
+
+                        if (nnx < 0 || nnx >= 5 || nny < 0 || nny >= 5) continue;
+                        if (nnx == i && nny == j) continue;
+                        
+                        // 사람 있으면 끝
+                        if (place[nnx].charAt(nny) == 'P') {
+                            answer[idx++] = 0;
+                            System.out.println("(" + i+", "+j + ")" + "  " + "(" + nnx+", "+nny + ")");
+                            
+                            return;
                         }
                     }
                 }
             }
         }
         
-        return true;
+        answer[idx++] = 1;
+        
     }
-    
-    static boolean inRange(int nx, int ny) {
-        return 0 <= nx && nx < 5 && 0 <= ny && ny < 5;
-    }
-    
 }
