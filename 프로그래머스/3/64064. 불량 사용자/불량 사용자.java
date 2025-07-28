@@ -6,7 +6,8 @@ class Solution {
     static HashMap<String, List<String>> map;
     
     public int solution(String[] user_id, String[] banned_id) {
-        // key : banned id | value : 일치하는 user id
+        // key : banned id
+        // value : 일치하는 user id
         map = new HashMap<>();
         
         for (int i = 0; i < banned_id.length; i++) {
