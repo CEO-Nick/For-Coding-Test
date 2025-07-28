@@ -1,37 +1,25 @@
-import java.util.*;
-import java.math.*;
-
 class Solution {
     public int solution(int n, int k) {
-        // 조건 : 소수인지 각 자릿수에 0이 없는 소수
-    
         int answer = 0;
+        String target = Integer.toString(n, k);
+        String[] candidates = target.split("0");
         
-        String baseChanged = changeBase(n, k);
-        String[] pList = baseChanged.split("0");
-        for (String p : pList) {
-            if (p.equals("")) continue;
-            
-            if (isPrime(Long.parseLong(p))) {
-                answer++;
-            }
+        for (String str : candidates) {
+            if (str.equals("")) continue;
+            if (isPrime(str)) answer++;
         }
         return answer;
     }
     
-    public boolean isPrime(long n) {
-        if (n <= 1) return false;
+    public static boolean isPrime(String num) {
+        long number = Long.parseLong(num);
         
-        for (int i = 2; i <= Math.sqrt(n); i++) 
-            if (n % i == 0) return false;
+        if (number == 2) return true;
+        if (number <= 1) return false;
         
+        for (int i = 2; i < (int)(Math.sqrt(number) + 1); i++) {
+            if (number % i == 0) return false;
+        }
         return true;
     }
-    
-    // 진법 변환
-    public String changeBase(int n, int k) {
-        return Long.toString(n, k);
-    }
-    
-    
 }
