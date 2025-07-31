@@ -31,20 +31,22 @@ class Solution {
         int[] answer = new int[] {l+1, r+1};
         
         while (l <= r) {
-            // 현재 모든 종류 포함하고 있다면
+            // 현재 모든 종류 포함하고 있다면 
+            // 최소 구간 체크하고 l을 오른쪽으로 한 칸 이동
             if (current.size() == total) {
-                // 최신화 가능한지 확인하고
                 if (r-l+1 < minLen) {
                     minLen = r-l+1;
                     answer[0] = l+1;
                     answer[1] = r+1;
                 }
-                // l를 오른쪽으로 한 칸 이동
+                
                 int count = current.get(gems[l]);
                 if (count == 1) current.remove(gems[l]);
                 else current.put(gems[l], count-1);
                 l++;
-            } else {
+            } 
+            // 모든 종류 보석 포함 안하고 있다면 r을 오른쪽으로 한 칸 이동
+            else {
                 r++;
                 if (r >= gems.length) break;
                 current.put(gems[r], current.getOrDefault(gems[r], 0)+1);
