@@ -1,45 +1,57 @@
-import java.util.Arrays;
-
+import java.util.*;
 
 class Solution {
+    // 최소 경로 -> n-1개 간선 선택 
+    // costs 배열을 비용으로 오름차순 정렬해서
+    // 안겹치게 n-1개 저장하면 되지 않을까?
     
-    static private int[] parent;
-    
-    // x의 root 노드 찾기
-    static int find(int x) {
-        if (parent[x] == x) return x;
+    static class Point implements Comparable<Point> {
+        int node;
+        int cost;
         
-        // x의 부모를 루트로 설정 -> 경로 압축
-        return parent[x] = find(parent[x]);
-    }
-    
-    // 두 집합 하나의 집합으로 합치기
-    static void union(int x, int y) {
-        int root1 = find(x);
-        int root2 = find(y);
-        parent[root2] = root1;
-    }
-    
-    public int solution(int n, int[][] costs) {
-        Arrays.sort(costs, (c1, c2) -> c1[2] - c2[2]);
-        
-        // parent 초기화
-        parent = new int[n];
-        for (int i = 0; i < n; i++) {
-            parent[i] = i;
+        Point(int node, int cost) {
+            this.node = node;
+            this.cost = cost;
         }
         
-        int answer = 0;
-        int edges = 0;
+        public int compareTo(Point p) {
+            return this.cost - p.cost;
+        }
         
-        for (int[] edge : costs) {
-            if (edges == n-1) break;
+    }
+    public int solution(int n, int[][] costs) {
+        int answer = 0;
+        
+        ArrayList<Point>[] arrList = new ArrayList[n];
+        for (int i = 0; i < n; i++) arrList[i] = new ArrayList<Point>();
+        
+        for (int i = 0; i < costs.length; i++) {
+            int a = costs[i][0];
+            int b = costs[i][1];
+            int c = costs[i][2];
             
-            // 두 섬이 연결되어 있는지 확인
-            if (find(edge[0]) != find(edge[1])) {
-                union(edge[0], edge[1]);
-                answer += edge[2];
-                edges++;
+            arrList[a].add(new Point(b, c));
+            arrList[b].add(new Point(a, c));
+        }
+        
+        boolean[] visited = new boolean[n];
+        PriorityQueue<Point> pq = new PriorityQueue<>();
+        pq.add(new Point(0, 0));
+        
+        while (!pq.isEmpty()) {
+            Point cur = pq.poll();
+            
+            if (visited[cur.node]) continue;
+            visited[cur.node] = true;
+            answer += cur.cost;
+            
+            for (int i = 0; i < arrList[cur.node].size(); i++) {
+                int to = arrList[cur.node].get(i).node;
+                int val = arrList[cur.node].get(i).cost;
+                
+                if (visited[to]) continue;
+                
+                pq.add(new Point(to, val));
             }
         }
         return answer;
