@@ -12,7 +12,7 @@ class Solution {
             dp1[i] = Math.max(dp1[i-1], dp1[i-2] + sticker[i]);
         }
         
-        // 두번째 스티커 뜯는 경우
+        // 첫번째 스티커 안 뜯은 경우
         int[] dp2 = new int[sticker.length];
         dp2[0] = 0;
         dp2[1] = sticker[1];
